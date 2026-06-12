@@ -1,4 +1,5 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
+import { ChevronDown, ChevronUp } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import '~/components/workspace/workspace.css'
 import { Logo } from '~/components/Logo'
@@ -97,8 +98,9 @@ function Workspace() {
 	}
 
 	function onSelect(id: string | null) {
+		// The slide-over is its own overlay; never move the roster sheet's
+		// detent out from under the user when a selection changes.
 		setSearch({ asset: id ?? undefined })
-		if (id && isMobile) setDetent('full')
 	}
 
 	// Lock body scroll when the mobile sheet is fully open.
@@ -173,7 +175,12 @@ function Workspace() {
 					<button
 						type='button'
 						className='sheet-handle'
-						aria-label={`Roster sheet (${detent}). Tap to expand or collapse.`}
+						aria-label={
+							detent === 'full'
+								? 'Collapse roster sheet'
+								: 'Expand roster sheet'
+						}
+						aria-expanded={detent !== 'peek'}
 						onClick={() =>
 							setDetent(d =>
 								d === 'peek' ? 'half' : d === 'half' ? 'full' : 'peek',
@@ -181,6 +188,13 @@ function Workspace() {
 						}
 					>
 						<span className='sheet-handle__grip' />
+						<span className='sheet-handle__chevron' aria-hidden='true'>
+							{detent === 'full' ? (
+								<ChevronDown size={14} />
+							) : (
+								<ChevronUp size={14} />
+							)}
+						</span>
 					</button>
 				)}
 				<InstrumentRail

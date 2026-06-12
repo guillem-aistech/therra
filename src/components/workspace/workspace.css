@@ -531,13 +531,33 @@
 
 /* --- mobile: rail becomes a bottom sheet ------------------------------- */
 @media (max-width: 860px) {
+	/* Top bar wraps: brand + nav on row 1, lens switcher full-width on row 2
+	   so the lens labels never truncate. */
+	.workspace__top {
+		flex-wrap: wrap;
+		gap: var(--space-2xs);
+		row-gap: var(--space-2xs);
+	}
+	.workspace__brand {
+		order: 1;
+	}
+	.workspace__nav {
+		order: 2;
+		margin-inline-start: auto;
+	}
+	.lens-switcher {
+		order: 3;
+		flex: 1 0 100%;
+	}
 	.workspace__ribbon {
-		inset-block-start: calc(var(--space-2xl) + 4px);
+		inset-block-start: calc(var(--space-2xl) + var(--space-lg));
 	}
 	.workspace__rail {
 		inset: auto 0 0 0;
 		width: 100%;
 		max-width: 100%;
+		/* Above the ribbon so the handle is always tappable at any detent. */
+		z-index: var(--z-overlay);
 		border-radius: var(--radius-md) var(--radius-md) 0 0;
 		border-inline: 0;
 		border-block-end: 0;
@@ -545,30 +565,43 @@
 		padding-block-end: env(safe-area-inset-bottom);
 	}
 	.workspace__rail[data-detent="peek"] {
-		height: 30dvh;
+		height: 22dvh;
 	}
 	.workspace__rail[data-detent="half"] {
-		height: 52dvh;
+		height: 50dvh;
 	}
 	.workspace__rail[data-detent="full"] {
-		height: 88dvh;
+		height: 86dvh;
 	}
+	/* Big, obvious tap target so the sheet is always easy to resize and never
+	   gets stuck. A chevron shows whether the next tap grows or collapses. */
 	.sheet-handle {
-		display: grid;
-		place-items: center;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 3px;
 		width: 100%;
-		height: 24px;
+		height: 34px;
 		border: 0;
 		background: var(--color-surface-container);
 		border-block-end: 1px solid var(--color-outline-variant);
 		cursor: pointer;
 		flex: 0 0 auto;
+		color: var(--color-on-surface-variant);
+		touch-action: manipulation;
+	}
+	.sheet-handle:hover {
+		background: var(--color-surface-container-high);
 	}
 	.sheet-handle__grip {
-		width: 40px;
-		height: 4px;
+		width: 52px;
+		height: 5px;
 		border-radius: var(--radius-full);
 		background: var(--color-outline);
+	}
+	.sheet-handle__chevron {
+		display: flex;
 	}
 	.workspace__detail {
 		inset: auto 0 0 0;
