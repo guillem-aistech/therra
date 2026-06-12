@@ -6,6 +6,7 @@ dist/
 .output/
 .nitro/
 .vite/
+.tanstack/
 
 # Generated route tree (regenerated on dev/build)
 src/routeTree.gen.ts
