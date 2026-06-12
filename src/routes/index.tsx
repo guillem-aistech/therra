@@ -24,10 +24,8 @@ function Home() {
 					/>
 				</h1>
 				<p
-					style={{
-						color: 'var(--color-fg-muted)',
-						fontSize: 'var(--font-size-lg)',
-					}}
+					className='text-body-large'
+					style={{ color: 'var(--color-on-surface-variant)' }}
 				>
 					A TanStack Start MVP with a fluid, token-driven design system.
 				</p>

@@ -1,6 +1,6 @@
 # TODO — Therra Intelligence Platform (TIP) demo
 
-Phase 0 investor-demo MVP. Full brief: [`EARLY_PROPOSAL.md`](EARLY_PROPOSAL.md).
+Phase 0 investor-demo MVP. Brief: [`EARLY_PROPOSAL.md`](EARLY_PROPOSAL.md) · architecture & design: [`../AGENTS.md`](../AGENTS.md) · believable data: [`MOCK_DATA.md`](MOCK_DATA.md).
 
 **Scope** (see `AGENTS.md`): **frontend-only** — no backend, no login, no database. Single TanStack Start codebase, plain CSS design tokens (no Tailwind), all data from **static client-side mock modules**. Charts via Recharts, icons via Lucide.
 
@@ -18,13 +18,18 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done.
 - [ ] Define TS types in `src/lib/types.ts`: `Asset`, `ThermalObservation`, `Alert`, `RiskAssessment`, `Report`
 - [ ] Define enums/unions: asset types (14), `Status` (Normal/Watch/Warning/Critical), `Criticality` (Low/Medium/High/Strategic), alert types
 
-## 2. Mock data (static, client-side)
+## 2. Mock data (static, client-side) — design in [`MOCK_DATA.md`](MOCK_DATA.md)
 
-- [ ] 40+ realistic assets across Europe / North Africa / Middle East / global (Barcelona LNG, Tarragona Refinery, Rotterdam Refinery, Frankfurt Data Center, Dubai Desalination, Sicily Gas Flare, Athens Wildfire Zone, …)
-- [ ] 90 days of thermal observations per asset (baseline + plausible anomalies)
-- [ ] Spread of statuses: some Normal, Watch, Warning, Critical
-- [ ] At least one alert per high-risk asset + a risk assessment per asset
-- [ ] Deterministic generation (seeded) so the demo looks identical every load
+Realism = **internal consistency**: every score/status/alert/chart derives from one generated thermal series. Build in `src/lib/data/`.
+
+- [ ] Seeded PRNG (`rng.ts`: xmur3 + mulberry32 + gaussian); fixed `DEMO_NOW` = 2026-06-12, `OBSERVATION_DAYS` = 90 — no `Date.now()`/`Math.random()`
+- [ ] Hand-author the **44-asset catalog** (`catalog.ts`) per the MOCK_DATA §5 table: identity, geo, type, criticality, exposure, lens metrics, climate params, scenario
+- [ ] Climate + seasonal model (`climate.ts`) and scenario anomaly shapes (`scenarios.ts`: spike / ramp / drop / flare / plume)
+- [ ] Thermal generator (`thermal.ts`): 90 obs/asset with baseline, delta, brightness, cloud gaps + confidence
+- [ ] Derive current/baseline/delta/anomaly/risk/health/status from the series via §3 (never hand-set)
+- [ ] `alerts.ts` (alerts from injected events; type valid for asset type, severity from anomaly score) + `risk.ts` (RiskAssessment + explanation citing real numbers)
+- [ ] EO provenance catalog (`provenance.ts`: Landsat / Sentinel-3 / MODIS / VIIRS / ECOSTRESS) + Phase 0 limitations copy
+- [ ] `index.ts` assembles the dataset once + typed selectors; pass the MOCK_DATA §11 QA checklist (status mix, no future dates, determinism)
 
 ## 3. Analytics (explainable, no black-box AI)
 
@@ -38,26 +43,26 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done.
 
 ## UX architecture — map-first workspace (no dashboard)
 
-The map IS the application. No dashboard page. Data floats on top of Mapbox as panels that read from and write to the map. Every view the proposal asked for is a *setting* of four orthogonal dials, not a separate page:
+Full spec in [`../AGENTS.md`](../AGENTS.md) → "UX architecture" + "Map implementation". Decided pattern (from the adversarial design debate): a restrained **Telemetry HUD** — dark instrument map, an **instrument rail** (named status roster), and one signature wow, the **lens re-ramp** (a lens switch re-pours color / radius / roster / KPIs over the *same* markers with the camera held still). The four dials:
 
 ```
 MAP (always there)  ×  LENS (who you are)  ×  SELECTION (what you clicked)  ×  FACET (which aspect)
 ```
 
-- **LENS** = a customer profile config (pure data) that re-skins the same workspace so it "talks to" each customer — swaps map layer, KPI signals, vocabulary, and default filter. The map stays put on switch (re-focus, not page change). Lenses: Infrastructure Operator (default), Insurer/Underwriter, Energy & Gas, Water/Desalination, Grid Operator, Climate/Civil Protection. New customer type = new config object, no new page. **This replaces the 6 sector dashboards.**
-- **SELECTION + FACET** = click an asset → slide-over detail panel over the map (fly-to, others dim), with facet tabs: Thermal · Risk · Insurance · Operations · Data. One detail component; facets adapt to lens + asset type. Thermal Heartbeat always present.
+- **LENS** replaces the 6 sector dashboards: Infrastructure Operator (default), Insurer/Underwriter, Energy & Gas, Water/Desalination, Grid Operator, Climate/Civil Protection. New customer = new config object, no new page.
+- **SELECTION + FACET** = click asset/row → slide-over with tabs Thermal · Risk · Insurance · Operations · Data. Heartbeat always leads.
 
 ## 4. Reusable components
 
-The whole app is ~6 floating panels + a few primitives.
+The whole app is ~6 floating panels over one map + a few primitives.
 
-- [ ] `MapCanvas` (extend `MapView.tsx`: lens-driven layers, status colors green/yellow/orange/red, per-type icons, fly-to, hover sparkline)
-- [ ] `LensSwitcher` (customer profile selector; drives layer + signals + vocabulary)
-- [ ] `SignalRibbon` (KPI status-tiles, lens-driven; tile click filters the map)
-- [ ] `AssetListPanel` (filterable, collapsible; selection syncs to map)
-- [ ] `AssetDetailPanel` (slide-over with facet tabs)
-- [ ] `AlertsPanel` (lens-filtered alert list)
-- [ ] `FilterControls`, `StatusBadge`, `RiskScoreCard`, `AssetTypeIcon` (Lucide), `ThermalHeartbeatChart` + baseline chart (Recharts)
+- [ ] `MapCanvas` (extend `MapView.tsx`): single GeoJSON source, circle layer (status color + zoom×risk radius), feature-state hover/select, lens re-ramp
+- [ ] `InstrumentRail` — severity-sorted roster of named rows (asset · status glyph+label · current °C · 24h Δ); cross-highlights the map
+- [ ] `SignalRibbon` — lens KPI counts ("3 Critical / 7 Warning / …") as click-to-filter chips from `querySourceFeatures`
+- [ ] `SelectionSlideOver` — facet tabs; Thermal tab leads with the 90-day Heartbeat
+- [ ] `HoverPopup` — themed, no-shadow; sparkline/text only (full chart lives in the slide-over)
+- [ ] `LensSwitcher` + `FacetStrip` — custom Mapbox `IControl`s
+- [ ] Primitives: `StatusBadge` (glyph+label, never color alone), `AssetTypeIcon` (Lucide), `RiskScoreCard`, `ThermalHeartbeatChart` + baseline chart (Recharts)
 
 ## 5. Routes (`src/routes/`)
 
@@ -67,13 +72,17 @@ No login. ~3 routes total — monitoring all happens in the workspace via lens/a
 - [ ] `/report` — print-friendly report from the current selection/lens
 - [ ] `/why-satellites` — Phase 0 vs dedicated-satellite pitch narrative
 
-## 6. Lens configs & interactions
+## 6. Map & lens implementation (Mapbox GL JS) — details in [`../AGENTS.md`](../AGENTS.md)
 
-- [ ] Define lens config objects in `src/lib/lenses/`: { map layer, KPI signal set, asset filter, detail-facet emphasis, vocabulary, accent }
-- [ ] Click asset → detail panel + map fly-to + dim others; hover → heartbeat sparkline tooltip
-- [ ] Filter / KPI-tile click → live marker update (e.g. "Critical (3)" → show only those)
-- [ ] Lens switch → layer + signals + words morph, selection preserved
-- [ ] **Phone:** panels become bottom-sheets over the map; lens = top dropdown; KPI ribbon scrolls horizontally; detail = full-height sheet; map always behind
+- [ ] One GeoJSON source `promoteId:'assetId'`; circle layer with `match` (status→color), `interpolate` (zoom×risk→radius), `step` (risk→status bands)
+- [ ] `feature-state` hover + selection (keyed to promoteId, rAF-batched); themed `Popup`
+- [ ] Lens configs in `src/lib/lenses/`: { palette/`match` table, radius metric, `setFilter` asset classes, facet emphasis, vocabulary, accent }
+- [ ] **Lens re-ramp** via `setPaintProperty`/`setLayoutProperty`/`setFilter` only — never `setData`/`setStyle`/camera move; selection + status colors survive
+- [ ] `querySourceFeatures` = single source for KPI counts + roster; tile/chip click → `setFilter`
+- [ ] Selection: `easeTo` + `setPadding` to clear panels; `flyTo` for roster jumps; slots for layer order
+- [ ] Mobile: bottom-sheet detents, `cooperativeGestures`, rotation disabled, `ResizeObserver→resize()`; reduced-motion = instant camera
+- [ ] SSR: keep all map modules behind the client-only dynamic import; URL-restrict the token; WebGL2 → Static Images fallback
+- [ ] **Cut for demo:** custom WebGL pulse, fill-extrusion/3D, heatmap, clustering, mapbox-gl-draw, live `setStyle()` dark/light toggle (dark-only map)
 
 ## 7. Design system — "Operational Clarity" (priority)
 
@@ -81,7 +90,7 @@ Direction: NOC dashboard + Swiss typography + enterprise design-system. Clear, s
 
 - [ ] Add IBM Plex Sans + IBM Plex Mono (self-hosted); mono/tabular figures for all metrics
 - [ ] Extend `src/styles/tokens.css`: neutral grayscale surfaces/borders + reserved status tokens (Normal/Watch/Warning/Critical) + one interactive accent
-- [ ] Dark theme by default (low-glare ops); light "report" theme for Reports/print
+- [ ] Dark theme by default (low-glare ops). Live map is dark-only; light "report" theme is DOM/CSS for `/report` only (no Mapbox `setStyle()` swap)
 - [ ] Flat components: 1px borders, minimal radius, no gradients/glass/soft-shadows
 - [ ] Strict 12-col grid + status-tile KPI grid; data tables first-class (dense, sortable, status via colored cell/badge)
 - [ ] **Test every view/panel at phone (~375px), tablet, and laptop widths** — no horizontal scroll, charts/tables reflow gracefully, map stays touch-usable

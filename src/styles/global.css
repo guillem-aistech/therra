@@ -1,9 +1,24 @@
 /* =========================================================================
    Therra — Global base styles
-   Minimal reset + base element styling, wired entirely to semantic tokens.
+   Minimal reset + base element styling, wired entirely to MD3 role tokens.
    Import tokens first so custom properties are defined before use.
    ========================================================================= */
 @import "./tokens.css";
+
+/* -------------------------------------------------------------------------
+   Brand display face — Architype Stedelijk (commercial, single weight).
+   Drop the licensed web font files into /public/fonts/ and uncomment to
+   enable it for display/headline text. Until then --font-display falls back
+   to IBM Plex Sans (see tokens.css).
+
+@font-face {
+	font-family: "Architype Stedelijk";
+	src: url("/fonts/architype-stedelijk.woff2") format("woff2");
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+------------------------------------------------------------------------- */
 
 *,
 *::before,
@@ -28,39 +43,183 @@ html {
 
 body {
 	min-height: 100dvh;
-	background-color: var(--color-bg);
-	color: var(--color-fg);
+	background-color: var(--color-surface);
+	color: var(--color-on-surface);
 	font-family: var(--font-sans);
-	font-size: var(--font-size-base);
-	line-height: var(--leading-normal);
-	font-weight: var(--weight-normal);
+	font-size: var(--text-body-large-size);
+	line-height: var(--text-body-large-line);
+	letter-spacing: var(--text-body-large-tracking);
+	font-weight: var(--text-body-large-weight);
 	-webkit-font-smoothing: antialiased;
 	text-rendering: optimizeLegibility;
 	/* Guard tiny screens: long words/URLs wrap instead of forcing h-scroll. */
 	overflow-wrap: break-word;
 }
 
+/* =========================================================================
+   MD3 typescale — utility classes for every role.
+   Display & headline use the brand display face; title/body/label use sans.
+   ========================================================================= */
+.text-display-large,
+.text-display-medium,
+.text-display-small,
+.text-headline-large,
+.text-headline-medium,
+.text-headline-small {
+	font-family: var(--font-display);
+}
+
+.text-title-large,
+.text-title-medium,
+.text-title-small,
+.text-body-large,
+.text-body-medium,
+.text-body-small,
+.text-label-large,
+.text-label-medium,
+.text-label-small {
+	font-family: var(--font-sans);
+}
+
+.text-display-large {
+	font-size: var(--text-display-large-size);
+	line-height: var(--text-display-large-line);
+	font-weight: var(--text-display-large-weight);
+	letter-spacing: var(--text-display-large-tracking);
+}
+.text-display-medium {
+	font-size: var(--text-display-medium-size);
+	line-height: var(--text-display-medium-line);
+	font-weight: var(--text-display-medium-weight);
+	letter-spacing: var(--text-display-medium-tracking);
+}
+.text-display-small {
+	font-size: var(--text-display-small-size);
+	line-height: var(--text-display-small-line);
+	font-weight: var(--text-display-small-weight);
+	letter-spacing: var(--text-display-small-tracking);
+}
+.text-headline-large {
+	font-size: var(--text-headline-large-size);
+	line-height: var(--text-headline-large-line);
+	font-weight: var(--text-headline-large-weight);
+	letter-spacing: var(--text-headline-large-tracking);
+}
+.text-headline-medium {
+	font-size: var(--text-headline-medium-size);
+	line-height: var(--text-headline-medium-line);
+	font-weight: var(--text-headline-medium-weight);
+	letter-spacing: var(--text-headline-medium-tracking);
+}
+.text-headline-small {
+	font-size: var(--text-headline-small-size);
+	line-height: var(--text-headline-small-line);
+	font-weight: var(--text-headline-small-weight);
+	letter-spacing: var(--text-headline-small-tracking);
+}
+.text-title-large {
+	font-size: var(--text-title-large-size);
+	line-height: var(--text-title-large-line);
+	font-weight: var(--text-title-large-weight);
+	letter-spacing: var(--text-title-large-tracking);
+}
+.text-title-medium {
+	font-size: var(--text-title-medium-size);
+	line-height: var(--text-title-medium-line);
+	font-weight: var(--text-title-medium-weight);
+	letter-spacing: var(--text-title-medium-tracking);
+}
+.text-title-small {
+	font-size: var(--text-title-small-size);
+	line-height: var(--text-title-small-line);
+	font-weight: var(--text-title-small-weight);
+	letter-spacing: var(--text-title-small-tracking);
+}
+.text-body-large {
+	font-size: var(--text-body-large-size);
+	line-height: var(--text-body-large-line);
+	font-weight: var(--text-body-large-weight);
+	letter-spacing: var(--text-body-large-tracking);
+}
+.text-body-medium {
+	font-size: var(--text-body-medium-size);
+	line-height: var(--text-body-medium-line);
+	font-weight: var(--text-body-medium-weight);
+	letter-spacing: var(--text-body-medium-tracking);
+}
+.text-body-small {
+	font-size: var(--text-body-small-size);
+	line-height: var(--text-body-small-line);
+	font-weight: var(--text-body-small-weight);
+	letter-spacing: var(--text-body-small-tracking);
+}
+.text-label-large {
+	font-size: var(--text-label-large-size);
+	line-height: var(--text-label-large-line);
+	font-weight: var(--text-label-large-weight);
+	letter-spacing: var(--text-label-large-tracking);
+}
+.text-label-medium {
+	font-size: var(--text-label-medium-size);
+	line-height: var(--text-label-medium-line);
+	font-weight: var(--text-label-medium-weight);
+	letter-spacing: var(--text-label-medium-tracking);
+}
+.text-label-small {
+	font-size: var(--text-label-small-size);
+	line-height: var(--text-label-small-line);
+	font-weight: var(--text-label-small-weight);
+	letter-spacing: var(--text-label-small-tracking);
+}
+
+/* Base elements map onto typescale roles. */
 h1,
 h2,
 h3,
 h4 {
-	line-height: var(--leading-tight);
-	letter-spacing: var(--tracking-tight);
-	font-weight: var(--weight-semibold);
+	font-family: var(--font-display);
 	text-wrap: balance;
 }
-
+h5,
+h6 {
+	font-family: var(--font-sans);
+	text-wrap: balance;
+}
 h1 {
-	font-size: var(--font-size-4xl);
+	font-size: var(--text-display-small-size);
+	line-height: var(--text-display-small-line);
+	font-weight: var(--text-display-small-weight);
+	letter-spacing: var(--text-display-small-tracking);
 }
 h2 {
-	font-size: var(--font-size-3xl);
+	font-size: var(--text-headline-large-size);
+	line-height: var(--text-headline-large-line);
+	font-weight: var(--text-headline-large-weight);
+	letter-spacing: var(--text-headline-large-tracking);
 }
 h3 {
-	font-size: var(--font-size-2xl);
+	font-size: var(--text-headline-medium-size);
+	line-height: var(--text-headline-medium-line);
+	font-weight: var(--text-headline-medium-weight);
+	letter-spacing: var(--text-headline-medium-tracking);
 }
 h4 {
-	font-size: var(--font-size-xl);
+	font-size: var(--text-headline-small-size);
+	line-height: var(--text-headline-small-line);
+	font-weight: var(--text-headline-small-weight);
+	letter-spacing: var(--text-headline-small-tracking);
+}
+h5 {
+	font-size: var(--text-title-large-size);
+	line-height: var(--text-title-large-line);
+	font-weight: var(--text-title-large-weight);
+	letter-spacing: var(--text-title-large-tracking);
+}
+h6 {
+	font-size: var(--text-title-medium-size);
+	line-height: var(--text-title-medium-line);
+	font-weight: var(--text-title-medium-weight);
+	letter-spacing: var(--text-title-medium-tracking);
 }
 
 p {
@@ -68,14 +227,19 @@ p {
 	text-wrap: pretty;
 }
 
+small {
+	font-size: var(--text-body-small-size);
+	line-height: var(--text-body-small-line);
+}
+
 a {
-	color: var(--color-accent);
+	color: var(--color-primary);
 	text-decoration-thickness: 0.08em;
 	text-underline-offset: 0.15em;
 	transition: color var(--duration-fast) var(--ease-standard);
 }
 a:hover {
-	color: var(--color-accent-hover);
+	color: color-mix(in oklab, var(--color-primary), var(--color-on-surface) 18%);
 }
 
 code,
@@ -106,7 +270,7 @@ select {
 
 /* Consistent, accessible focus indication everywhere. */
 :focus-visible {
-	outline: 2px solid var(--color-focus-ring);
+	outline: 2px solid var(--color-primary);
 	outline-offset: 2px;
 	border-radius: var(--radius-xs);
 }
@@ -124,9 +288,7 @@ select {
 }
 
 /* Auto-placing grid: items are at least --col-min wide and otherwise share
-   space equally. Columns appear/disappear automatically as width changes.
-   The min() guard prevents overflow when the viewport is narrower than
-   --col-min (e.g. a 16rem card on a 320px phone). */
+   space equally. Columns appear/disappear automatically as width changes. */
 .grid-auto {
 	display: grid;
 	gap: var(--space-md);
@@ -171,10 +333,10 @@ select {
 	position: relative;
 	width: 100%;
 	height: clamp(20rem, 60vh, 40rem); /* fluid map height across screen sizes */
-	border: 1px solid var(--color-border);
+	border: 1px solid var(--color-outline-variant);
 	border-radius: var(--radius-lg);
 	overflow: hidden;
-	background-color: var(--color-surface-alt);
+	background-color: var(--color-surface-container-high);
 }
 
 .map__placeholder {
@@ -183,9 +345,9 @@ select {
 	height: 100%;
 	padding: var(--space-md);
 	text-align: center;
-	color: var(--color-fg-muted);
+	color: var(--color-on-surface-variant);
 }
 
 .map__placeholder code {
-	color: var(--color-fg);
+	color: var(--color-on-surface);
 }

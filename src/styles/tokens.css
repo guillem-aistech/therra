@@ -1,63 +1,114 @@
 /* =========================================================================
-   Therra — Design Tokens
+   Therra — Design Tokens (Material Design 3)
    -------------------------------------------------------------------------
-   Two-tier system:
-     1. Primitives  — raw, unopinionated scales (color, type, space, …).
-     2. Semantics   — role-based tokens that consume primitives. Components
-                      should reference ONLY semantic tokens, never primitives.
+   Color and typography follow the MD3 system, named by ROLE (primary,
+   on-surface, surface-container-high, outline, …) rather than by component
+   or appearance. Components reference these role tokens only.
 
-   Fluid scales use clamp(min, intercept + slope·vw, max), interpolated
-   linearly between a 320px (min) and 1240px (max) viewport. Below 320px the
-   value pins to min; above 1240px it pins to max. Root font-size assumed 16px.
+   • Color roles are generated with the official Material color utilities from
+     the brand source #ffb300 (amber). Light values live on :root; the dark
+     scheme is remapped under prefers-color-scheme + [data-theme]. Every text /
+     surface pair is verified to meet WCAG AA (≥4.5:1 text, ≥3:1 UI).
+   • Typescale roles (display / headline / title / body / label) carry size,
+     line-height, weight and tracking. Display & headline sizes are fluid
+     (clamp, 320→1240px) for phone→desktop; smaller roles stay fixed for
+     legibility.
+
+   Non-color/type primitives (spacing, radius, motion, z, layout) are kept as
+   plain scales — MD3 does not redefine them.
    ========================================================================= */
 
 :root {
-	/* ---------------------------------------------------------------------
-     PRIMITIVES — Color (OKLCH neutral ramp + accent)
-     --------------------------------------------------------------------- */
-	--neutral-0: oklch(99% 0.002 264);
-	--neutral-50: oklch(97% 0.003 264);
-	--neutral-100: oklch(94% 0.004 264);
-	--neutral-200: oklch(88% 0.006 264);
-	--neutral-300: oklch(80% 0.008 264);
-	--neutral-400: oklch(68% 0.01 264);
-	--neutral-500: oklch(58% 0.012 264);
-	--neutral-600: oklch(48% 0.012 264);
-	--neutral-700: oklch(39% 0.011 264);
-	--neutral-800: oklch(29% 0.009 264);
-	--neutral-900: oklch(21% 0.007 264);
-	--neutral-950: oklch(15% 0.006 264);
-	--neutral-1000: oklch(10% 0.005 264);
+	/* =====================================================================
+	   TYPOGRAPHY
+	   --------------------------------------------------------------------- */
 
-	--accent-300: oklch(82% 0.12 256);
-	--accent-400: oklch(72% 0.15 256);
-	--accent-500: oklch(62% 0.17 256);
-	--accent-600: oklch(54% 0.17 256);
-	--accent-700: oklch(46% 0.15 256);
+	/* Font families. Display/headline use the brand face (Architype Stedelijk,
+	   a geometric De Stijl display type — see global.css @font-face); it falls
+	   back to the readable sans until the licensed files are installed. Body,
+	   title and label text use IBM Plex Sans. Metrics use IBM Plex Mono. */
+	--font-sans:
+		"IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+		Roboto, Helvetica, Arial, sans-serif;
+	--font-mono:
+		"IBM Plex Mono", ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas,
+		monospace;
+	--font-display: "Architype Stedelijk", var(--font-sans);
 
-	--danger-500: oklch(58% 0.2 25);
-	--warning-500: oklch(72% 0.16 75);
-	--success-500: oklch(62% 0.15 150);
+	/* Display (fluid) */
+	--text-display-large-size: clamp(2.5rem, 2.1304rem + 1.8478vw, 3.5625rem);
+	--text-display-large-line: 1.12;
+	--text-display-large-weight: 400;
+	--text-display-large-tracking: -0.016em;
+	--text-display-medium-size: clamp(2.125rem, 1.8859rem + 1.1957vw, 2.8125rem);
+	--text-display-medium-line: 1.16;
+	--text-display-medium-weight: 400;
+	--text-display-medium-tracking: 0em;
+	--text-display-small-size: clamp(1.875rem, 1.7446rem + 0.6522vw, 2.25rem);
+	--text-display-small-line: 1.22;
+	--text-display-small-weight: 400;
+	--text-display-small-tracking: 0em;
 
-	/* Brand — the Therra wordmark amber (#ffb300). Kept distinct from the
-	   status ramp so it never reads as a "Watch" signal. */
-	--brand-500: #ffb300;
+	/* Headline (fluid) */
+	--text-headline-large-size: clamp(1.75rem, 1.663rem + 0.4348vw, 2rem);
+	--text-headline-large-line: 1.25;
+	--text-headline-large-weight: 400;
+	--text-headline-large-tracking: 0em;
+	--text-headline-medium-size: clamp(1.5rem, 1.413rem + 0.4348vw, 1.75rem);
+	--text-headline-medium-line: 1.29;
+	--text-headline-medium-weight: 400;
+	--text-headline-medium-tracking: 0em;
+	--text-headline-small-size: clamp(1.375rem, 1.3315rem + 0.2174vw, 1.5rem);
+	--text-headline-small-line: 1.33;
+	--text-headline-small-weight: 400;
+	--text-headline-small-tracking: 0em;
 
-	/* ---------------------------------------------------------------------
-     PRIMITIVES — Fluid type scale (~1.2 ratio min → ~1.33 max)
-     --------------------------------------------------------------------- */
-	--font-size-xs: clamp(0.75rem, 0.728rem + 0.109vw, 0.8125rem); /* 12 → 13 */
-	--font-size-sm: clamp(0.875rem, 0.853rem + 0.109vw, 0.9375rem); /* 14 → 15 */
-	--font-size-base: clamp(1rem, 0.957rem + 0.217vw, 1.125rem); /* 16 → 18 */
-	--font-size-lg: clamp(1.125rem, 1.038rem + 0.435vw, 1.375rem); /* 18 → 22 */
-	--font-size-xl: clamp(1.3125rem, 1.16rem + 0.761vw, 1.75rem); /* 21 → 28 */
-	--font-size-2xl: clamp(1.5625rem, 1.323rem + 1.196vw, 2.25rem); /* 25 → 36 */
-	--font-size-3xl: clamp(1.9375rem, 1.568rem + 1.848vw, 3rem); /* 31 → 48 */
-	--font-size-4xl: clamp(2.3125rem, 1.726rem + 2.935vw, 4rem); /* 37 → 64 */
+	/* Title (fixed) */
+	--text-title-large-size: 1.375rem;
+	--text-title-large-line: 1.27;
+	--text-title-large-weight: 400;
+	--text-title-large-tracking: 0em;
+	--text-title-medium-size: 1rem;
+	--text-title-medium-line: 1.5;
+	--text-title-medium-weight: 500;
+	--text-title-medium-tracking: 0.009em;
+	--text-title-small-size: 0.875rem;
+	--text-title-small-line: 1.43;
+	--text-title-small-weight: 500;
+	--text-title-small-tracking: 0.007em;
 
-	/* ---------------------------------------------------------------------
-     PRIMITIVES — Fluid spacing scale
-     --------------------------------------------------------------------- */
+	/* Body (fixed) */
+	--text-body-large-size: 1rem;
+	--text-body-large-line: 1.5;
+	--text-body-large-weight: 400;
+	--text-body-large-tracking: 0.031em;
+	--text-body-medium-size: 0.875rem;
+	--text-body-medium-line: 1.43;
+	--text-body-medium-weight: 400;
+	--text-body-medium-tracking: 0.018em;
+	--text-body-small-size: 0.75rem;
+	--text-body-small-line: 1.33;
+	--text-body-small-weight: 400;
+	--text-body-small-tracking: 0.025em;
+
+	/* Label (fixed) */
+	--text-label-large-size: 0.875rem;
+	--text-label-large-line: 1.43;
+	--text-label-large-weight: 500;
+	--text-label-large-tracking: 0.007em;
+	--text-label-medium-size: 0.75rem;
+	--text-label-medium-line: 1.33;
+	--text-label-medium-weight: 500;
+	--text-label-medium-tracking: 0.042em;
+	--text-label-small-size: 0.6875rem;
+	--text-label-small-line: 1.45;
+	--text-label-small-weight: 500;
+	--text-label-small-tracking: 0.045em;
+
+	/* =====================================================================
+	   SPACING / RADIUS / LAYOUT / MOTION (non-MD3 primitives)
+	   Fluid scales: clamp(min, intercept + slope·vw, max), 320→1240px.
+	   --------------------------------------------------------------------- */
 	--space-3xs: clamp(0.25rem, 0.228rem + 0.109vw, 0.3125rem); /*  4 →  5 */
 	--space-2xs: clamp(0.5rem, 0.478rem + 0.109vw, 0.5625rem); /*  8 →  9 */
 	--space-xs: clamp(0.75rem, 0.706rem + 0.217vw, 0.875rem); /* 12 → 14 */
@@ -68,33 +119,6 @@
 	--space-2xl: clamp(4rem, 3.304rem + 3.478vw, 6rem); /* 64 → 96 */
 	--space-3xl: clamp(6rem, 5.304rem + 3.478vw, 8rem); /* 96 → 128 */
 
-	/* ---------------------------------------------------------------------
-     PRIMITIVES — Typography metadata
-     --------------------------------------------------------------------- */
-	--font-sans:
-		ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica,
-		Arial, sans-serif;
-	--font-mono:
-		ui-monospace, "SF Mono", "Cascadia Code", "JetBrains Mono", Menlo, Consolas,
-		monospace;
-
-	--leading-tight: 1.15;
-	--leading-snug: 1.3;
-	--leading-normal: 1.5;
-	--leading-relaxed: 1.7;
-
-	--weight-normal: 400;
-	--weight-medium: 500;
-	--weight-semibold: 600;
-	--weight-bold: 700;
-
-	--tracking-tight: -0.01em;
-	--tracking-normal: 0;
-	--tracking-wide: 0.02em;
-
-	/* ---------------------------------------------------------------------
-     PRIMITIVES — Radii, shadows, layout, motion
-     --------------------------------------------------------------------- */
 	--radius-xs: 0.25rem;
 	--radius-sm: 0.375rem;
 	--radius-md: 0.5rem;
@@ -102,11 +126,7 @@
 	--radius-xl: 1rem;
 	--radius-full: 9999px;
 
-	--shadow-sm: 0 1px 2px oklch(0% 0 0 / 0.06);
-	--shadow-md: 0 2px 4px oklch(0% 0 0 / 0.06), 0 4px 12px oklch(0% 0 0 / 0.08);
-	--shadow-lg: 0 8px 24px oklch(0% 0 0 / 0.12), 0 2px 6px oklch(0% 0 0 / 0.08);
-
-	/* Fluid content width: comfortable reading measure that grows with viewport. */
+	/* Fluid content widths. */
 	--width-content: clamp(20rem, 92vw, 75rem);
 	--width-prose: clamp(20rem, 90vw, 42rem);
 
@@ -124,73 +144,167 @@
 	--duration-slow: 320ms;
 
 	/* =====================================================================
-     SEMANTIC TOKENS — light theme (default)
-     Components reference these, not the primitives above.
-     ===================================================================== */
+	   COLOR — MD3 roles, light scheme (default)
+	   Generated from source #ffb300; verified WCAG AA.
+	   --------------------------------------------------------------------- */
 	color-scheme: light;
 
-	--color-bg: var(--neutral-50);
-	--color-surface: var(--neutral-0);
-	--color-surface-alt: var(--neutral-100);
-	--color-border: var(--neutral-200);
-	--color-border-strong: var(--neutral-300);
+	--color-primary: #7e5700;
+	--color-on-primary: #ffffff;
+	--color-primary-container: #ffdeac;
+	--color-on-primary-container: #281900;
+	--color-secondary: #6e5c40;
+	--color-on-secondary: #ffffff;
+	--color-secondary-container: #f8dfbb;
+	--color-on-secondary-container: #261904;
+	--color-tertiary: #4e6542;
+	--color-on-tertiary: #ffffff;
+	--color-tertiary-container: #d1eabf;
+	--color-on-tertiary-container: #0d2005;
+	--color-error: #ba1a1a;
+	--color-on-error: #ffffff;
+	--color-error-container: #ffdad6;
+	--color-on-error-container: #410002;
+	--color-on-surface: #1f1b16;
+	--color-surface-variant: #efe0cf;
+	--color-on-surface-variant: #4e4539;
+	--color-outline: #807567;
+	--color-outline-variant: #d2c4b4;
+	--color-shadow: #000000;
+	--color-scrim: #000000;
+	--color-inverse-surface: #34302a;
+	--color-inverse-on-surface: #f8efe7;
+	--color-inverse-primary: #ffba38;
+	--color-background: #fff8f3;
+	--color-on-background: #1f1b16;
+	--color-surface: #fff8f3;
+	--color-surface-dim: #e1d9d0;
+	--color-surface-bright: #fff8f3;
+	--color-surface-container-lowest: #ffffff;
+	--color-surface-container-low: #fbf2e9;
+	--color-surface-container: #f5ece4;
+	--color-surface-container-high: #f0e7de;
+	--color-surface-container-highest: #eae1d9;
 
-	--color-fg: var(--neutral-900);
-	--color-fg-muted: var(--neutral-600);
-	--color-fg-subtle: var(--neutral-500);
-	--color-fg-on-accent: var(--neutral-0);
+	/* Extended status roles (MD3 custom colors). */
+	--color-success: #1b6d24;
+	--color-on-success: #ffffff;
+	--color-success-container: #a3f69c;
+	--color-on-success-container: #002204;
+	--color-warning: #b12d00;
+	--color-on-warning: #ffffff;
+	--color-warning-container: #ffdbd1;
+	--color-on-warning-container: #3b0900;
 
-	--color-accent: var(--accent-600);
-	--color-accent-hover: var(--accent-700);
-	--color-accent-subtle: var(--accent-300);
-	--color-focus-ring: var(--accent-500);
-
-	/* Brand mark color. Amber reads well on both the light and dark surfaces,
-	   so it is not remapped in the dark theme. */
-	--color-brand: var(--brand-500);
-
-	--color-danger: var(--danger-500);
-	--color-warning: var(--warning-500);
-	--color-success: var(--success-500);
+	/* Brand mark color — the vivid wordmark amber, fixed across themes
+	   (used by the logo only; not a UI/status signal). */
+	--color-brand: #ffb300;
+	--color-on-brand: #281900;
 }
 
 /* =======================================================================
-   SEMANTIC TOKENS — dark theme
-   Remaps semantic roles only; primitive scales are unchanged.
+   COLOR — MD3 roles, dark scheme
    ======================================================================= */
-@media (prefers-color-scheme: dark) {
-	:root {
-		color-scheme: dark;
-
-		--color-bg: var(--neutral-1000);
-		--color-surface: var(--neutral-950);
-		--color-surface-alt: var(--neutral-900);
-		--color-border: var(--neutral-800);
-		--color-border-strong: var(--neutral-700);
-
-		--color-fg: var(--neutral-100);
-		--color-fg-muted: var(--neutral-400);
-		--color-fg-subtle: var(--neutral-500);
-		--color-fg-on-accent: var(--neutral-1000);
-
-		--color-accent: var(--accent-400);
-		--color-accent-hover: var(--accent-300);
-		--color-accent-subtle: var(--accent-700);
-		--color-focus-ring: var(--accent-400);
-
-		--shadow-sm: 0 1px 2px oklch(0% 0 0 / 0.4);
-		--shadow-md: 0 2px 4px oklch(0% 0 0 / 0.4), 0 4px 12px oklch(0% 0 0 / 0.5);
-		--shadow-lg: 0 8px 24px oklch(0% 0 0 / 0.6), 0 2px 6px oklch(0% 0 0 / 0.4);
-	}
-}
-
-/* Manual override hook: set data-theme="light" | "dark" on <html> to opt out
-   of the system preference (wire this to a theme toggle later). */
-:root[data-theme="light"] {
-	color-scheme: light;
-}
 :root[data-theme="dark"] {
 	color-scheme: dark;
+
+	--color-primary: #ffba38;
+	--color-on-primary: #432c00;
+	--color-primary-container: #604100;
+	--color-on-primary-container: #ffdeac;
+	--color-secondary: #dbc3a1;
+	--color-on-secondary: #3d2e16;
+	--color-secondary-container: #55442a;
+	--color-on-secondary-container: #f8dfbb;
+	--color-tertiary: #b5cea4;
+	--color-on-tertiary: #213618;
+	--color-tertiary-container: #374c2c;
+	--color-on-tertiary-container: #d1eabf;
+	--color-error: #ffb4ab;
+	--color-on-error: #690005;
+	--color-error-container: #93000a;
+	--color-on-error-container: #ffb4ab;
+	--color-on-surface: #eae1d9;
+	--color-surface-variant: #4e4539;
+	--color-on-surface-variant: #d2c4b4;
+	--color-outline: #9b8f80;
+	--color-outline-variant: #4e4539;
+	--color-shadow: #000000;
+	--color-scrim: #000000;
+	--color-inverse-surface: #eae1d9;
+	--color-inverse-on-surface: #34302a;
+	--color-inverse-primary: #7e5700;
+	--color-background: #16130e;
+	--color-on-background: #eae1d9;
+	--color-surface: #16130e;
+	--color-surface-dim: #16130e;
+	--color-surface-bright: #3d3833;
+	--color-surface-container-lowest: #110e09;
+	--color-surface-container-low: #1f1b16;
+	--color-surface-container: #231f1a;
+	--color-surface-container-high: #2d2924;
+	--color-surface-container-highest: #39342e;
+
+	--color-success: #88d982;
+	--color-on-success: #003909;
+	--color-success-container: #005312;
+	--color-on-success-container: #a3f69c;
+	--color-warning: #ffb5a0;
+	--color-on-warning: #601400;
+	--color-warning-container: #872000;
+	--color-on-warning-container: #ffdbd1;
+}
+
+/* Follow the OS preference unless an explicit [data-theme] is set. The dark
+   values above are reused by pointing the media query at the same block. */
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]) {
+		color-scheme: dark;
+
+		--color-primary: #ffba38;
+		--color-on-primary: #432c00;
+		--color-primary-container: #604100;
+		--color-on-primary-container: #ffdeac;
+		--color-secondary: #dbc3a1;
+		--color-on-secondary: #3d2e16;
+		--color-secondary-container: #55442a;
+		--color-on-secondary-container: #f8dfbb;
+		--color-tertiary: #b5cea4;
+		--color-on-tertiary: #213618;
+		--color-tertiary-container: #374c2c;
+		--color-on-tertiary-container: #d1eabf;
+		--color-error: #ffb4ab;
+		--color-on-error: #690005;
+		--color-error-container: #93000a;
+		--color-on-error-container: #ffb4ab;
+		--color-on-surface: #eae1d9;
+		--color-surface-variant: #4e4539;
+		--color-on-surface-variant: #d2c4b4;
+		--color-outline: #9b8f80;
+		--color-outline-variant: #4e4539;
+		--color-inverse-surface: #eae1d9;
+		--color-inverse-on-surface: #34302a;
+		--color-inverse-primary: #7e5700;
+		--color-background: #16130e;
+		--color-on-background: #eae1d9;
+		--color-surface: #16130e;
+		--color-surface-dim: #16130e;
+		--color-surface-bright: #3d3833;
+		--color-surface-container-lowest: #110e09;
+		--color-surface-container-low: #1f1b16;
+		--color-surface-container: #231f1a;
+		--color-surface-container-high: #2d2924;
+		--color-surface-container-highest: #39342e;
+
+		--color-success: #88d982;
+		--color-on-success: #003909;
+		--color-success-container: #005312;
+		--color-on-success-container: #a3f69c;
+		--color-warning: #ffb5a0;
+		--color-on-warning: #601400;
+		--color-warning-container: #872000;
+		--color-on-warning-container: #ffdbd1;
+	}
 }
 
 @media (prefers-reduced-motion: reduce) {
