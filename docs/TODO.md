@@ -59,13 +59,13 @@ MAP (always there)  ×  LENS (who you are)  ×  SELECTION (what you clicked)  ×
 
 The whole app is ~6 floating panels over one map + a few primitives.
 
-- [ ] `MapCanvas` (extend `MapView.tsx`): single GeoJSON source; circle (points) + line (corridors/pipelines) + flat fill (zones/districts) layers; feature-state hover/select; lens re-ramp
-- [ ] `InstrumentRail` — severity-sorted roster of named rows (asset · status glyph+label · current °C · 24h Δ); cross-highlights the map
-- [ ] `SignalRibbon` — lens KPI counts ("3 Critical / 7 Warning / …") as click-to-filter chips from `querySourceFeatures`
-- [ ] `SelectionSlideOver` — facet tabs; Thermal tab leads with the 90-day Heartbeat
-- [ ] `HoverPopup` — themed, no-shadow; sparkline/text only (full chart lives in the slide-over)
-- [ ] `LensSwitcher` + `FacetStrip` — custom Mapbox `IControl`s
-- [ ] Primitives: `StatusBadge` (glyph+label, never color alone), `AssetTypeIcon` (Lucide), `RiskScoreCard`, `ThermalHeartbeatChart` + baseline chart (Recharts)
+- [x] `MapCanvas` (`components/map/`): single GeoJSON source; circle (points) + line (corridors/pipelines) + flat fill (zones/districts) layers; feature-state hover/select; lens re-ramp
+- [x] `InstrumentRail` — severity-sorted roster of named rows (asset · status glyph+label · current °C · 24h Δ); cross-highlights the map
+- [x] `SignalRibbon` — lens KPI counts ("3 Critical / 6 Warning / …") as click-to-filter chips (counts derived from the dataset; equivalent to `querySourceFeatures` for static data)
+- [x] `SelectionSlideOver` — facet tabs; Thermal tab leads with the 90-day Heartbeat
+- [x] `HoverPopup` — themed, no-shadow; sparkline/text only (full chart lives in the slide-over)
+- [x] `LensSwitcher` + `FacetStrip` — accessible HTML controls (tablist) over the map
+- [x] Primitives: `StatusBadge` (glyph+label, never color alone), `AssetTypeIcon` (Lucide), `RiskScoreCard`, `ThermalHeartbeatChart` + baseline reference (Recharts)
 
 ## 5. Routes (`src/routes/`)
 

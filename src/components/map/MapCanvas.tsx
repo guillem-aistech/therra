@@ -48,6 +48,8 @@ export interface MapCanvasProps {
 	/** Padding (px) to keep the selected asset clear of panels. */
 	padding?: { top?: number; bottom?: number; left?: number; right?: number }
 	reducedMotion?: boolean
+	/** Bump this value to fit the camera to the current lens's assets. */
+	fitSignal?: number
 }
 
 function readStatusColors(): StatusColors {
@@ -67,6 +69,23 @@ function readStatusColors(): StatusColors {
 		Warning: read('--status-warning', fallback.Warning),
 		Critical: read('--status-critical', fallback.Critical),
 	}
+}
+
+function reduceMotion(): boolean {
+	return (
+		typeof window !== 'undefined' &&
+		window.matchMedia('(prefers-reduced-motion: reduce)').matches
+	)
+}
+
+/** Assets currently visible under a lens + status chip (matches the layers). */
+function visibleAssets(lensId: LensId, statusFilter: Status | null) {
+	const lens = getLens(lensId)
+	return getAssets().filter(
+		a =>
+			lens.assetTypes.includes(a.asset_type) &&
+			(!statusFilter || a.status === statusFilter),
+	)
 }
 
 export function MapCanvas(props: MapCanvasProps) {
@@ -153,6 +172,10 @@ export function MapCanvas(props: MapCanvasProps) {
 						'line-color': colorExpression(colors),
 						'line-width': lineWidthExpression(lens),
 						'line-opacity': 0.9,
+						'line-width-transition': {
+							duration: reduceMotion() ? 0 : 450,
+							delay: 0,
+						},
 					},
 				})
 				map.addLayer({
@@ -166,6 +189,11 @@ export function MapCanvas(props: MapCanvasProps) {
 						'circle-opacity': 0.92,
 						'circle-stroke-color': strokeColorExpression(accentRef.current),
 						'circle-stroke-width': strokeWidthExpression(),
+						// Eases the radius when the lens metric changes (the re-ramp).
+						'circle-radius-transition': {
+							duration: reduceMotion() ? 0 : 450,
+							delay: 0,
+						},
 					},
 				})
 
@@ -234,6 +262,46 @@ export function MapCanvas(props: MapCanvasProps) {
 		if (map && readyRef.current)
 			applySelection(map, selectedId, props.padding, props.reducedMotion)
 	}, [selectedId, props.padding, props.reducedMotion])
+
+	/* --- fit camera to the current lens on request ---------------------- */
+	// biome-ignore lint/correctness/useExhaustiveDependencies: fire only when the fit signal changes; fitToLens reads the latest props by closure.
+	useEffect(() => {
+		if (props.fitSignal && readyRef.current) fitToLens()
+	}, [props.fitSignal])
+
+	function fitToLens() {
+		const map = mapRef.current
+		if (!map) return
+		const assets = visibleAssets(lensId, statusFilter)
+		if (assets.length === 0) return
+		let minLng = Infinity
+		let minLat = Infinity
+		let maxLng = -Infinity
+		let maxLat = -Infinity
+		for (const a of assets) {
+			minLng = Math.min(minLng, a.longitude)
+			maxLng = Math.max(maxLng, a.longitude)
+			minLat = Math.min(minLat, a.latitude)
+			maxLat = Math.max(maxLat, a.latitude)
+		}
+		const pad = props.padding ?? {}
+		map.fitBounds(
+			[
+				[minLng, minLat],
+				[maxLng, maxLat],
+			],
+			{
+				padding: {
+					top: (pad.top ?? 40) + 24,
+					bottom: (pad.bottom ?? 40) + 24,
+					left: (pad.left ?? 40) + 24,
+					right: (pad.right ?? 40) + 24,
+				},
+				maxZoom: 9,
+				duration: props.reducedMotion ? 0 : 900,
+			},
+		)
+	}
 
 	if (!MAPBOX_TOKEN) {
 		return (

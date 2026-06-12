@@ -58,17 +58,18 @@ function metricNorm(lens: Lens): unknown {
 
 /** Circle radius = zoom curve × (floor + lens-metric weight). The zoom
     interpolate must stay top-level, so the per-feature factor scales each
-    stop's output rather than wrapping the interpolate. */
+    stop's output rather than wrapping the interpolate. The floor keeps even
+    low-metric markers glanceable at low zoom. */
 export function radiusExpression(lens: Lens): ExpressionSpecification {
-	const factor = ['+', 0.55, ['*', 0.95, metricNorm(lens)]]
+	const factor = ['+', 0.7, ['*', 0.85, metricNorm(lens)]]
 	return cast([
 		'interpolate',
 		['linear'],
 		['zoom'],
 		2,
-		['*', 2.5, factor],
+		['*', 3.4, factor],
 		5,
-		['*', 4, factor],
+		['*', 4.6, factor],
 		9,
 		['*', 8, factor],
 		13,
@@ -108,7 +109,9 @@ export function layerFilter(
 	return cast(typeFilter ? ['all', geom, typeFilter] : geom)
 }
 
-/** Selection/hover ring colour via feature-state (survives lens re-ramp). */
+/** Selection/hover ring colour via feature-state (survives lens re-ramp).
+    Unselected markers keep a faint dark halo so they separate from the
+    basemap. */
 export function strokeColorExpression(accent: string): ExpressionSpecification {
 	return cast([
 		'case',
@@ -116,18 +119,18 @@ export function strokeColorExpression(accent: string): ExpressionSpecification {
 		accent,
 		['boolean', ['feature-state', 'hover'], false],
 		accent,
-		'rgba(0,0,0,0)',
+		'rgba(5,8,13,0.65)',
 	])
 }
 
-/** Selection ring is thicker than hover ring. */
+/** Selection ring is thicker than hover ring; all markers keep a thin halo. */
 export function strokeWidthExpression(): ExpressionSpecification {
 	return cast([
 		'case',
 		['boolean', ['feature-state', 'selected'], false],
-		3,
+		3.5,
 		['boolean', ['feature-state', 'hover'], false],
-		1.5,
-		0,
+		2,
+		1.2,
 	])
 }

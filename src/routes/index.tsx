@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
-import { ChevronDown, ChevronUp } from 'lucide-react'
+import { ChevronDown, ChevronUp, Maximize2 } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import '~/components/workspace/workspace.css'
 import { Logo } from '~/components/Logo'
@@ -52,6 +52,7 @@ function Workspace() {
 	const [statusFilter, setStatusFilter] = useState<Status | null>(null)
 	const [hover, setHover] = useState<HoverInfo | null>(null)
 	const [detent, setDetent] = useState<'peek' | 'half' | 'full'>('half')
+	const [fitSignal, setFitSignal] = useState(0)
 
 	const isMobile = useMediaQuery('(max-width: 860px)')
 	const reducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)')
@@ -142,9 +143,20 @@ function Workspace() {
 			</header>
 
 			<div className='workspace__ribbon'>
-				<span className='workspace__lenstag text-label-small'>
-					{lens.tagline}
-				</span>
+				<div className='workspace__ribbon-top'>
+					<span className='workspace__lenstag text-label-small'>
+						{lens.tagline}
+					</span>
+					<button
+						type='button'
+						className='fit-btn text-label-small'
+						onClick={() => setFitSignal(n => n + 1)}
+						title='Fit the map to the assets in this lens'
+					>
+						<Maximize2 size={13} aria-hidden='true' />
+						Fit
+					</button>
+				</div>
 				<SignalRibbon
 					counts={counts}
 					active={statusFilter}
@@ -161,6 +173,7 @@ function Workspace() {
 					onHover={setHover}
 					padding={padding}
 					reducedMotion={reducedMotion}
+					fitSignal={fitSignal}
 				/>
 				{hover && !isMobile && (
 					<HoverPopup assetId={hover.id} x={hover.x} y={hover.y} />

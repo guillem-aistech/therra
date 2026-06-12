@@ -21,11 +21,19 @@ export function HoverPopup({ assetId, x, y }: HoverPopupProps) {
 		.slice(-30)
 		.map(o => o.land_surface_temperature_c)
 
-	// Keep the popup inside the viewport-ish by offsetting up-left of cursor.
+	// Clamp horizontally and flip below the cursor near the top edge so the
+	// popup never spills off-screen.
+	const W = 200
+	const H = 96
+	const vw = typeof window !== 'undefined' ? window.innerWidth : 1280
+	const clampedX = Math.min(Math.max(x, W / 2 + 8), vw - W / 2 - 8)
+	const below = y < H + 24
 	const style: React.CSSProperties = {
-		left: x,
+		left: clampedX,
 		top: y,
-		transform: 'translate(-50%, calc(-100% - 14px))',
+		transform: below
+			? 'translate(-50%, 16px)'
+			: 'translate(-50%, calc(-100% - 14px))',
 	}
 
 	return (
