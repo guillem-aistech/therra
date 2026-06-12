@@ -4,9 +4,13 @@ Guidance for AI coding agents (and humans) working in this repository.
 
 ## Project
 
-**Therra** — an MVP web application built with TypeScript and
-[TanStack Start](https://tanstack.com/start). Currently a clean,
-domain-agnostic starter; product features are built on top of it.
+**Therra Space** — building the **Therra Intelligence Platform (TIP)**, a B2B geospatial intelligence MVP. Tagline: *"Measure the pulse of civilization."*
+
+TIP turns public thermal / Earth-observation data into risk intelligence for insurers, infrastructure operators, governments, and energy companies. The core concept is the **Thermal Heartbeat**: every monitored asset (refinery, LNG terminal, data center, desalination plant, power corridor, urban district, …) has a temperature time-series, and deviations from its baseline drive anomaly, risk, and insurance scores. This is a **Phase 0 investor-demo MVP** — it uses mock/seeded data and labels it as such; the pitch narrative leads toward a future dedicated thermal-satellite constellation.
+
+The full product brief lives in [`docs/EARLY_PROPOSAL.md`](docs/EARLY_PROPOSAL.md) and the build plan in [`docs/TODO.md`](docs/TODO.md).
+
+> **Scope note:** this is a **frontend-only demo** — no backend, no login, no database. The goal is for investors and audiences to *envision* the product on their **phones and laptops**, so it must be fully responsive and visually polished. The proposal was written as a generic "build from scratch" prompt (React+Tailwind+FastAPI+PostgreSQL+Docker); we **adapt it to this repo**: one TanStack Start codebase, plain CSS design tokens (no Tailwind), and all data served from **static client-side mock modules** (no server functions, no auth). Treat the proposal's backend/auth/stack sections as inspiration, not requirements.
 
 ## Stack
 
@@ -19,6 +23,9 @@ domain-agnostic starter; product features are built on top of it.
 | Lint / format   | **Biome** (`biome.json`) — not ESLint/Prettier          |
 | Styling         | Plain CSS with a fluid design-token system (`src/styles`) |
 | Map             | Mapbox GL JS (`src/components/MapView.tsx`)             |
+| Charts          | Recharts (planned)                                      |
+| Icons           | Lucide React (planned)                                  |
+| Data            | Static client-side **mock modules** (no backend, no auth) |
 | Package manager | **pnpm 11+** (do not use npm or yarn)                   |
 | Runtime         | Node.js 24                                              |
 | Hosting         | Netlify (official-partner Vite plugin)                  |
@@ -133,6 +140,43 @@ pnpm deploy          # = netlify deploy (use --prod for production)
 
 `netlify.toml` pins the build command, publish dir (`dist/client`), and
 Node 24. Continuous deployment from a git repo also works once connected.
+
+## References
+
+Authoritative docs for the core stack — consult these (and prefer them over
+guesswork) when implementing features or debugging.
+
+### TanStack Start (full-stack framework)
+
+- Overview & guides: <https://tanstack.com/start/latest/docs/framework/react/overview>
+- Server functions (`createServerFn`) — the backend boundary:
+  <https://tanstack.com/start/latest/docs/framework/react/server-functions>
+- Data loading & SSR: <https://tanstack.com/start/latest/docs/framework/react/ssr>
+- Hosting / deployment targets: <https://tanstack.com/start/latest/docs/framework/react/hosting>
+
+### TanStack Router (routing, used by Start)
+
+- Overview: <https://tanstack.com/router/latest/docs/framework/react/overview>
+- File-based routing: <https://tanstack.com/router/latest/docs/framework/react/routing/file-based-routing>
+- Route loaders & data: <https://tanstack.com/router/latest/docs/framework/react/guide/data-loading>
+- Type-safe navigation & params: <https://tanstack.com/router/latest/docs/framework/react/guide/navigation>
+
+### Netlify (hosting)
+
+- TanStack Start on Netlify: <https://docs.netlify.com/build/frameworks/framework-setup-guides/tanstack-start/>
+- `@netlify/vite-plugin-tanstack-start`: <https://www.npmjs.com/package/@netlify/vite-plugin-tanstack-start>
+- Environment variables: <https://docs.netlify.com/build/environment-variables/overview/>
+- `netlify.toml` reference: <https://docs.netlify.com/build/configure-builds/file-based-configuration/>
+
+### Mapbox GL JS (map)
+
+- API reference (`Map`, controls, sources, layers):
+  <https://docs.mapbox.com/mapbox-gl-js/api/>
+- Guides (getting started, styles, performance):
+  <https://docs.mapbox.com/mapbox-gl-js/guides/>
+- Built-in style URLs (e.g. `satellite-v9`, `satellite-streets-v12`):
+  <https://docs.mapbox.com/api/maps/styles/#mapbox-styles>
+- Access tokens & URL restrictions: <https://docs.mapbox.com/help/getting-started/access-tokens/>
 
 ## Working agreements for agents
 

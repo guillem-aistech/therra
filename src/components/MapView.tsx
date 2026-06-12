@@ -9,14 +9,14 @@ export interface MapViewProps {
 	/** [longitude, latitude] — defaults to Barcelona. */
 	center?: [number, number]
 	zoom?: number
-	/** Mapbox style URL. */
+	/** Mapbox style URL. Defaults to satellite imagery. */
 	styleUrl?: string
 }
 
 export function MapView({
 	center = [2.1734, 41.3851],
 	zoom = 11,
-	styleUrl = 'mapbox://styles/mapbox/streets-v12',
+	styleUrl = 'mapbox://styles/mapbox/satellite-v9',
 }: MapViewProps) {
 	const containerRef = useRef<HTMLDivElement>(null)
 
