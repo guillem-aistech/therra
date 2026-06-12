@@ -6,8 +6,12 @@ import {
 } from '@tanstack/react-router'
 import type { ReactNode } from 'react'
 
-// Self-hosted brand/body fonts (IBM Plex Sans for UI, IBM Plex Mono for
-// metrics). Side-effect imports so Vite bundles the woff2 + @font-face CSS.
+// Self-hosted fonts: Chakra Petch (display/headline), IBM Plex Sans (UI),
+// IBM Plex Mono (metrics). Side-effect imports so Vite bundles the woff2 +
+// @font-face CSS.
+import '@fontsource/chakra-petch/400.css'
+import '@fontsource/chakra-petch/500.css'
+import '@fontsource/chakra-petch/600.css'
 import '@fontsource/ibm-plex-sans/400.css'
 import '@fontsource/ibm-plex-sans/500.css'
 import '@fontsource/ibm-plex-sans/600.css'

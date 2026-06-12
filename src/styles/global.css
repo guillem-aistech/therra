@@ -5,20 +5,8 @@
    ========================================================================= */
 @import "./tokens.css";
 
-/* -------------------------------------------------------------------------
-   Brand display face — Architype Stedelijk (commercial, single weight).
-   Drop the licensed web font files into /public/fonts/ and uncomment to
-   enable it for display/headline text. Until then --font-display falls back
-   to IBM Plex Sans (see tokens.css).
-
-@font-face {
-	font-family: "Architype Stedelijk";
-	src: url("/fonts/architype-stedelijk.woff2") format("woff2");
-	font-weight: 400;
-	font-style: normal;
-	font-display: swap;
-}
-------------------------------------------------------------------------- */
+/* Display/headline use Chakra Petch; body/UI use IBM Plex Sans; metrics use
+   IBM Plex Mono. All self-hosted via @fontsource (imported in __root.tsx). */
 
 *,
 *::before,

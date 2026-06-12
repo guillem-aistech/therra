@@ -30,7 +30,7 @@ The full product brief lives in [`docs/EARLY_PROPOSAL.md`](docs/EARLY_PROPOSAL.m
 | Runtime         | Node.js 24                                              |
 | Hosting         | Netlify (official-partner Vite plugin)                  |
 | Unit testing    | **Vitest** + Testing Library (jsdom)                    |
-| E2E testing     | Playwright (planned)                                    |
+| E2E / visual    | Playwright — E2E + responsive/mobile visual checks      |
 | Environment     | Nix flake (`flake.nix`) — `devShells.default`           |
 
 ## Getting started
@@ -102,12 +102,14 @@ Run these from inside `nix develop`:
 
 Clear, straight, function-first — a control-room monitoring tool an infrastructure operator trusts. Blend of **NOC dashboard** (glanceable status grid + alert tables), **Swiss/International typography** (strict grid, typographic discipline), and **enterprise design-system** (sober, accessible, credible components). Deliberately *not* a generic AI-MVP / SaaS look.
 
-- **No decoration:** no gradients, glassmorphism, or soft drop-shadows. Flat surfaces, 1px borders, minimal radius (~2–4px), squared and instrument-like.
-- **Palette:** neutral grayscale surfaces, **dark theme by default** (low-glare ops). The **live map ships dark-only**; the light *"report" theme* is a DOM/CSS theme for the `/report` print view only — never a Mapbox `setStyle()` swap (that would wipe layers + feature-state). Status colors are semantic and reserved — Normal = green, Warning = orange, Critical = red — never used for decoration. The **MD3 palette is seeded from the brand amber (`#ffb300`)**: `primary` is amber (links/actions/focus), with `secondary`/`tertiary` supplying cooler/green support tones; the vivid wordmark amber lives in `--color-brand` (mark only).
-- **Typography:** MD3 typescale (`display`/`headline`/`title`/`body`/`label`). **Architype Stedelijk** for display/headline (brand display face, falls back to IBM Plex Sans until licensed files are added); **IBM Plex Sans** for UI; **IBM Plex Mono** / tabular figures for all metrics, temperatures, and table numbers so columns align.
+- **No decoration:** no gradients, glassmorphism, or soft drop-shadows. Flat surfaces with `--color-outline(-variant)` 1px borders and `surface-container*` tiers for hierarchy — **not** MD3 elevation / `--color-shadow`. Minimal radius (`--radius-xs/sm`), squared and instrument-like.
+- **Palette:** **MD3 roles seeded from the brand amber (`#ffb300`)** — warm-neutral surfaces, not literal grayscale. `--color-primary` (amber) is the single interactive accent (links / actions / focus / selection ring); the vivid wordmark amber `--color-brand` is **mark-only, never a UI or status signal**.
+- **Theme:** the app shell forces **dark** by setting `data-theme="dark"` on `<html>` (the tokens default `:root` to light). The **live map ships dark-only**. The light *"report" theme* applies to the `/report` route only, via that route's `<html data-theme="light">` (a DOM/CSS theme, never a Mapbox `setStyle()` swap — that would wipe layers + feature-state). ⚠️ Per-subtree theming is impossible with the current `:root`-scoped tokens — theme whole routes, or refactor the value blocks onto `[data-theme]` selectors usable on any element.
+- **Status colors** are semantic, reserved (never decoration), and need **four mutually-distinct hues**: Normal · Watch · Warning · Critical. ⚠️ MD3 ships only `success`/`warning`/`error` (three) and in **dark mode `--color-warning` ≈ `--color-error`** (salmon vs pink-red) — too close to separate Warning from Critical. Define a dedicated 4-stop `--status-*` ramp (generated with the same Material utilities), each distinct from the others *and* from the amber `primary`/`brand`; **Watch must not be the brand amber**. Always pair the color with a glyph + label (never color alone).
+- **Typography:** MD3 typescale (`display`/`headline`/`title`/`body`/`label`). **Chakra Petch** (free, squared geometric) for display/headline; **IBM Plex Sans** for UI; **IBM Plex Mono** / tabular figures for all metrics, temperatures, and table numbers so columns align. All self-hosted via fontsource. (The wordmark logo itself remains Architype Stedelijk, shipped as outlined paths.)
 - **Layout:** strict 12-column grid, consistent gutters, hard alignment. KPIs as a status-tile grid (number + label + status edge). Data tables are first-class — dense, sortable, status shown via a colored cell/badge, not a tinted card.
 - **Charts (Recharts):** thin lines, light gridlines, status-colored series, tabular tooltips — no gradient fills.
-- All of the above is expressed through the `src/styles/` semantic tokens — add status + neutral tokens there, never hard-code.
+- All of the above is expressed through the `src/styles/` MD3 tokens — add the `--status-*` ramp there (verify WCAG AA on `surface` / `surface-container*` in dark), never hard-code hex.
 
 ## UX architecture — map-first workspace
 
@@ -119,7 +121,7 @@ MAP (always there) × LENS (who you are) × SELECTION (what you clicked) × FACE
 
 The chosen pattern is a restrained **"Telemetry HUD"** (validated by an adversarial design debate — see `docs/TODO.md`): a dark instrument surface, an information-rich rail, and one signature wow — the **lens re-ramp**.
 
-- **MAP at rest** — near-monochrome dark base; ~40 assets as small **circle markers colored *only* by status** (green/amber/orange/red), radius driven by `zoom × riskScore`. No heatmap, no 3D, no decoration: the map is an instrument bezel.
+- **MAP at rest** — near-monochrome dark base; ~40 assets as small **markers colored *only* by the four `--status-*` tokens** (Normal/Watch/Warning/Critical), radius driven by `zoom × riskScore`. Point assets use a circle layer; **corridors/pipelines use a thin status-colored `line` layer and zones/districts a flat low-opacity `fill`** (no extrusion). No heatmap, no 3D, no decoration: the map is an instrument bezel.
 - **LENS** — a customer-profile config (pure data in `src/lib/lenses/`) that re-skins the workspace so it "talks to" each customer. Switching a lens is a **pure paint/filter swap with the camera held dead still** — palette, radius metric, roster labels, and KPI vocabulary all re-pour over the *same* markers in <1s. This is the demo's signature moment ("one map becomes a different product per customer") and it survives reduced-motion because it is not a camera move. Lenses replace the proposal's six sector dashboards; a new customer type = a new config object, not a new page.
 - **INSTRUMENT RAIL** — a severity-sorted roster of named rows (asset · status glyph+label · current °C · 24h Δ). It makes the workspace read as a real ops tool from the first frame, is the reliable tap target on phones, and is the keyboard/screen-reader path to the data.
 - **SELECTION + FACET** — clicking an asset (or a roster row) opens a slide-over over the map (`easeTo` + padding recenters it, others dim) with facet tabs (Thermal · Risk · Insurance · Operations · Data). One detail component; facets adapt to lens + asset type. The Thermal Heartbeat always leads the Thermal tab.
@@ -133,14 +135,14 @@ Concrete plan from the design debate; build onto the existing client-only `MapVi
 
 **Use (stable primitives only):**
 
-- **One `GeoJSON` source** with `promoteId: 'assetId'`; push live Heartbeat ticks via `setData()`.
-- **Circle layer** as the sole marker layer — `match` on `['get','status']` for color, `interpolate` on `zoom × riskScore` for radius, stroke/accent from `feature-state` via `case`.
+- **One `GeoJSON` source** with `promoteId: 'assetId'`. Data is static/deterministic — use `setData()` only to re-apply derived state (filters/selection), **not** to stream live values.
+- **Circle layer** for point assets — `match` on `['get','status']` for color, `interpolate` on `zoom × riskScore` for radius, stroke/accent from `feature-state` via `case`. Plus a thin **`line`** layer (corridors/pipelines) and a flat **`fill`** layer (zones/districts), both status-colored; each area asset also carries a representative point for the roster/selection.
 - **`step` expression** maps continuous `riskScore` → the four hard status bands (no gradient in status).
 - **`feature-state`** (`setFeatureState`/`removeFeatureState`, keyed to `promoteId`) for hover + selection so they survive a lens re-skin; rAF-batch the writes.
 - **`setPaintProperty` / `setLayoutProperty` / `setFilter`** are the **lens re-ramp** — never `setData`, never `setStyle`, never a camera move on a lens switch.
 - **`querySourceFeatures`** is the single source for KPI counts and the roster (consistent across pan/zoom) — don't also use `queryRenderedFeatures` for counts.
 - **Camera:** `easeTo` + `setPadding` to recenter a selected asset clear of panels; `fitBounds`/`cameraForBounds` only on explicit "fit to lens"; `flyTo` for roster jumps.
-- **Slots** (`bottom`/`middle`/`top`) for layer order against the Standard style — not `beforeId` — so basemap labels never bury Critical markers.
+- **Slots** (`bottom`/`middle`/`top`) for layer order against the Standard style — not `beforeId` — so basemap labels never bury Critical markers. (Requires **Mapbox GL JS v3+**; verify the installed version and import `mapbox-gl/dist/mapbox-gl.css`.)
 - **Controls:** restyled `NavigationControl`/`ScaleControl` + custom `IControl`s (lens switcher, facet strip).
 - **`Popup`** with a themed `className` (no shadow); keep the hover popup to a sparkline/text and mount the full Recharts chart only in the slide-over, unmounting on close (React-root lifecycle).
 - **Mobile:** `cooperativeGestures`, `pitchWithRotate:false`, `touchZoomRotate.disableRotation()`, `ResizeObserver → map.resize()` after sheet-detent changes (debounced).
@@ -149,6 +151,19 @@ Concrete plan from the design debate; build onto the existing client-only `MapVi
 **Avoid (cut for the demo — cost/perf/brand sinks):** custom `CustomLayerInterface` WebGL pulse; `fill-extrusion`/3D/emissive glow (violates the flat brand); `heatmap` (dishonest at ~40 sparse points); GeoJSON clustering (meaningless at 40 — render all); `mapbox-gl-draw` AOI; a live dark/light `setStyle()` toggle (it wipes sources/layers/feature-state). Ship the **dark-only** live map.
 
 **SSR & token:** `mapbox-gl` touches `window`/WebGL at import — keep every map-touching module behind the existing client-only dynamic import, or SSR breaks on TanStack Start + Netlify. URL-restrict the public `VITE_MAPBOX_ACCESS_TOKEN`. Feature-detect WebGL2 → Mapbox Static Images fallback (a simple still map + markers) for locked-down devices.
+
+## Viewing & verifying the UI (Playwright)
+
+**Look at the UI — don't just trust the code.** This matters most for **mobile responsiveness** (the demo is opened on phones). A Playwright browser is available via MCP; use it to drive the running app, and capture a screenshot set before declaring any UI change done.
+
+1. Start the dev server (`pnpm dev`, <http://localhost:3000>) and open it in Playwright.
+2. **Check these viewports on every layout change:** phone `390×844` (iPhone) and `360×740` (small Android), tablet `768×1024`, laptop `1280×800`. Screenshot each.
+3. At each width verify: **no horizontal scroll/overflow**; the map stays full-bleed and touch-usable; the rail collapses to the bottom-sheet with working detents (peek/half/full); text and touch targets are legible (≥44px); `SelectionSlideOver` and `LensSwitcher` work.
+4. Exercise the flows: switch lenses (the re-ramp), select an asset (slide-over + recenter), open a facet tab, filter via a KPI chip.
+5. Read the **browser console** after each interaction (token, WebGL, React warnings).
+6. Emulate `prefers-reduced-motion: reduce` (camera jumps are instant) and confirm the dark theme renders; emulate `prefers-color-scheme` for the `/report` light view; test **portrait and landscape** phone.
+
+The `verify` and `run` skills wrap this flow if you prefer.
 
 ## Project layout
 

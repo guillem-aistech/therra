@@ -23,17 +23,17 @@
 	   TYPOGRAPHY
 	   --------------------------------------------------------------------- */
 
-	/* Font families. Display/headline use the brand face (Architype Stedelijk,
-	   a geometric De Stijl display type — see global.css @font-face); it falls
-	   back to the readable sans until the licensed files are installed. Body,
-	   title and label text use IBM Plex Sans. Metrics use IBM Plex Mono. */
+	/* Font families. Display/headline use Chakra Petch — a free, squared,
+	   constructed geometric (De Stijl-adjacent) display face that echoes the
+	   blocky grid of the wordmark. Body, title and label text use IBM Plex
+	   Sans; metrics use IBM Plex Mono. All self-hosted (see __root.tsx). */
 	--font-sans:
 		"IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
 		Roboto, Helvetica, Arial, sans-serif;
 	--font-mono:
 		"IBM Plex Mono", ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas,
 		monospace;
-	--font-display: "Architype Stedelijk", var(--font-sans);
+	--font-display: "Chakra Petch", var(--font-sans);
 
 	/* Display (fluid) */
 	--text-display-large-size: clamp(2.5rem, 2.1304rem + 1.8478vw, 3.5625rem);
