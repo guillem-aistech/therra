@@ -23,6 +23,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # Generates src/routeTree.gen.ts (gitignored) and validates the
+      # production build before typecheck/tests run against it.
+      - name: Build
+        run: pnpm build
+
       - name: Lint & typecheck
         run: pnpm check
 
