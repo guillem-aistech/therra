@@ -36,42 +36,56 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done.
 - [ ] `calculateFireRiskIndex()`, `calculateBusinessInterruptionRisk()`, `calculateThermalVolatility()`
 - [ ] `generateAssetRecommendations()` + human-readable score **explanations** (the "why")
 
+## UX architecture — map-first workspace (no dashboard)
+
+The map IS the application. No dashboard page. Data floats on top of Mapbox as panels that read from and write to the map. Every view the proposal asked for is a *setting* of four orthogonal dials, not a separate page:
+
+```
+MAP (always there)  ×  LENS (who you are)  ×  SELECTION (what you clicked)  ×  FACET (which aspect)
+```
+
+- **LENS** = a customer profile config (pure data) that re-skins the same workspace so it "talks to" each customer — swaps map layer, KPI signals, vocabulary, and default filter. The map stays put on switch (re-focus, not page change). Lenses: Infrastructure Operator (default), Insurer/Underwriter, Energy & Gas, Water/Desalination, Grid Operator, Climate/Civil Protection. New customer type = new config object, no new page. **This replaces the 6 sector dashboards.**
+- **SELECTION + FACET** = click an asset → slide-over detail panel over the map (fly-to, others dim), with facet tabs: Thermal · Risk · Insurance · Operations · Data. One detail component; facets adapt to lens + asset type. Thermal Heartbeat always present.
+
 ## 4. Reusable components
 
-- [ ] `StatusBadge`, `RiskScoreCard`, `AssetTypeIcon` (Lucide by type)
-- [ ] `ThermalHeartbeatChart`, baseline-comparison chart (Recharts, responsive containers)
-- [ ] `AssetMap` (extend `MapView.tsx`: status colors green/yellow/orange/red, per-type icons, popup)
-- [ ] `KPIGrid`, `AlertTable`, `AssetTable`, `FilterPanel`, `ReportPreview`
+The whole app is ~6 floating panels + a few primitives.
 
-## 5. Pages / routes (`src/routes/`)
+- [ ] `MapCanvas` (extend `MapView.tsx`: lens-driven layers, status colors green/yellow/orange/red, per-type icons, fly-to, hover sparkline)
+- [ ] `LensSwitcher` (customer profile selector; drives layer + signals + vocabulary)
+- [ ] `SignalRibbon` (KPI status-tiles, lens-driven; tile click filters the map)
+- [ ] `AssetListPanel` (filterable, collapsible; selection syncs to map)
+- [ ] `AssetDetailPanel` (slide-over with facet tabs)
+- [ ] `AlertsPanel` (lens-filtered alert list)
+- [ ] `FilterControls`, `StatusBadge`, `RiskScoreCard`, `AssetTypeIcon` (Lucide), `ThermalHeartbeatChart` + baseline chart (Recharts)
 
-No login — app opens straight into the Dashboard.
+## 5. Routes (`src/routes/`)
 
-- [ ] Landing/Dashboard (nav, KPI cards, map, asset table, recent alerts, risk chart)
-- [ ] Map view (interactive, color-coded, per-type icons, popups → detail)
-- [ ] Assets list (filter by type, status, risk, region, criticality, exposure, anomaly type)
-- [ ] Asset detail (header, summary cards, heartbeat, baseline, risk breakdown, observations, alerts, recommended action, insurance + infra panels, data provenance)
-- [ ] Alerts page (table + filters)
-- [ ] Insurance dashboard
-- [ ] Critical Infrastructure dashboard
-- [ ] Wildfire & Climate dashboard
-- [ ] Gas Flares dashboard
-- [ ] Desalination dashboard
-- [ ] Power Grid dashboard
-- [ ] Reports page (select asset/date-range/type → on-screen, print-friendly report)
-- [ ] "Why Therra Satellites?" page (Phase 0 vs dedicated-satellite comparison table)
+No login. ~3 routes total — monitoring all happens in the workspace via lens/asset/facet.
 
-## 6. Navigation & layout
+- [ ] `/` — map workspace. Lens, selected asset, and facet live in the URL so views are shareable (`/?lens=insurer&asset=BCN-LNG-01&facet=risk`)
+- [ ] `/report` — print-friendly report from the current selection/lens
+- [ ] `/why-satellites` — Phase 0 vs dedicated-satellite pitch narrative
 
-- [ ] App shell: top nav + sidebar (Dashboard, Map, Assets, Alerts, Insurance, Critical Infrastructure, Wildfire & Climate, Gas Flares, Desalination, Power Grid, Reports, "Why Therra Satellites?")
-- [ ] **Mobile nav**: sidebar collapses to a drawer/bottom-nav on phones
+## 6. Lens configs & interactions
 
-## 7. Responsive & design system (priority)
+- [ ] Define lens config objects in `src/lib/lenses/`: { map layer, KPI signal set, asset filter, detail-facet emphasis, vocabulary, accent }
+- [ ] Click asset → detail panel + map fly-to + dim others; hover → heartbeat sparkline tooltip
+- [ ] Filter / KPI-tile click → live marker update (e.g. "Critical (3)" → show only those)
+- [ ] Lens switch → layer + signals + words morph, selection preserved
+- [ ] **Phone:** panels become bottom-sheets over the map; lens = top dropdown; KPI ribbon scrolls horizontally; detail = full-height sheet; map always behind
 
-- [ ] Dark theme by default; high contrast; premium space/intelligence feel
-- [ ] Extend `src/styles/tokens.css` with status colors + thermal/earth palette (semantic tokens only)
-- [ ] **Test every page at phone (~375px), tablet, and laptop widths** — no horizontal scroll, charts/maps/tables reflow gracefully
-- [ ] Tables → card lists on narrow screens; map stays usable with touch
+## 7. Design system — "Operational Clarity" (priority)
+
+Direction: NOC dashboard + Swiss typography + enterprise design-system. Clear, straight, no decoration. Not a generic AI-MVP look. See `AGENTS.md` → Design language.
+
+- [ ] Add IBM Plex Sans + IBM Plex Mono (self-hosted); mono/tabular figures for all metrics
+- [ ] Extend `src/styles/tokens.css`: neutral grayscale surfaces/borders + reserved status tokens (Normal/Watch/Warning/Critical) + one interactive accent
+- [ ] Dark theme by default (low-glare ops); light "report" theme for Reports/print
+- [ ] Flat components: 1px borders, minimal radius, no gradients/glass/soft-shadows
+- [ ] Strict 12-col grid + status-tile KPI grid; data tables first-class (dense, sortable, status via colored cell/badge)
+- [ ] **Test every view/panel at phone (~375px), tablet, and laptop widths** — no horizontal scroll, charts/tables reflow gracefully, map stays touch-usable
+- [ ] Panels → bottom-sheets on narrow screens; tables → card lists
 - [ ] Loading and empty/error states on all data views
 
 ## 8. Reports

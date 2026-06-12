@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 
+import { Logo } from '~/components/Logo'
 import { MapView } from '~/components/MapView'
 
 export const Route = createFileRoute('/')({
@@ -16,7 +17,12 @@ function Home() {
 				className='stack'
 				style={{ ['--stack-gap' as string]: 'var(--space-2xs)' }}
 			>
-				<h1>Therra</h1>
+				<h1 style={{ margin: 0 }}>
+					<Logo
+						className='logo'
+						style={{ ['--logo-height' as string]: '2.5rem' }}
+					/>
+				</h1>
 				<p
 					style={{
 						color: 'var(--color-fg-muted)',

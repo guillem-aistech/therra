@@ -39,6 +39,10 @@
 	--warning-500: oklch(72% 0.16 75);
 	--success-500: oklch(62% 0.15 150);
 
+	/* Brand — the Therra wordmark amber (#ffb300). Kept distinct from the
+	   status ramp so it never reads as a "Watch" signal. */
+	--brand-500: #ffb300;
+
 	/* ---------------------------------------------------------------------
      PRIMITIVES — Fluid type scale (~1.2 ratio min → ~1.33 max)
      --------------------------------------------------------------------- */
@@ -140,6 +144,10 @@
 	--color-accent-hover: var(--accent-700);
 	--color-accent-subtle: var(--accent-300);
 	--color-focus-ring: var(--accent-500);
+
+	/* Brand mark color. Amber reads well on both the light and dark surfaces,
+	   so it is not remapped in the dark theme. */
+	--color-brand: var(--brand-500);
 
 	--color-danger: var(--danger-500);
 	--color-warning: var(--warning-500);

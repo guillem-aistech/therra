@@ -95,6 +95,31 @@ Run these from inside `nix develop`:
 - Prefer **small, composable modules** over large files.
 - Use the `~/` path alias (maps to `src/`) instead of long relative chains.
 
+## Design language — "Operational Clarity"
+
+Clear, straight, function-first — a control-room monitoring tool an infrastructure operator trusts. Blend of **NOC dashboard** (glanceable status grid + alert tables), **Swiss/International typography** (strict grid, typographic discipline), and **enterprise design-system** (sober, accessible, credible components). Deliberately *not* a generic AI-MVP / SaaS look.
+
+- **No decoration:** no gradients, glassmorphism, or soft drop-shadows. Flat surfaces, 1px borders, minimal radius (~2–4px), squared and instrument-like.
+- **Palette:** neutral grayscale surfaces, **dark theme by default** (low-glare ops) with a light "report" theme. Status colors are semantic and reserved — Normal = green, Watch = amber, Warning = orange, Critical = red — never used for decoration. One restrained interactive accent (cool blue/teal) for links/actions, kept distinct from status colors.
+- **Typography:** IBM Plex Sans for UI; IBM Plex Mono / tabular figures for all metrics, temperatures, and table numbers so columns align.
+- **Layout:** strict 12-column grid, consistent gutters, hard alignment. KPIs as a status-tile grid (number + label + status edge). Data tables are first-class — dense, sortable, status shown via a colored cell/badge, not a tinted card.
+- **Charts (Recharts):** thin lines, light gridlines, status-colored series, tabular tooltips — no gradient fills.
+- All of the above is expressed through the `src/styles/` semantic tokens — add status + neutral tokens there, never hard-code.
+
+## UX architecture — map-first workspace
+
+There is **no dashboard page**. The map *is* the application; data floats on top of Mapbox as panels that read from and write to the map. Every view the proposal asked for is a *setting* of four orthogonal dials, not a separate page:
+
+```
+MAP (always there) × LENS (who you are) × SELECTION (what you clicked) × FACET (which aspect)
+```
+
+- **LENS** — a customer-profile config (pure data in `src/lib/lenses/`) that re-skins the workspace so it "talks to" each customer: swaps map layer, KPI signals, vocabulary, and default filter. Switching a lens keeps the map in place (re-focus, not navigation). Lenses replace the proposal's six sector dashboards; a new customer type = a new config object, not a new page.
+- **SELECTION + FACET** — clicking an asset opens a slide-over detail panel over the map (fly-to, dim others) with facet tabs (Thermal · Risk · Insurance · Operations · Data). One detail component; facets adapt to lens + asset type. The Thermal Heartbeat is always present.
+- **~3 routes only:** `/` (workspace; lens/asset/facet in the URL → shareable views), `/report` (print-friendly), `/why-satellites` (pitch narrative).
+- The whole app is built from ~6 reusable floating panels: `LensSwitcher`, `SignalRibbon` (KPI tiles), `AssetListPanel`, `AssetDetailPanel`, `AlertsPanel`, `FilterControls` — all over a single `MapCanvas`.
+- **Phone:** panels become bottom-sheets over the map; lens = top dropdown; map always behind. See `docs/TODO.md` for the build breakdown.
+
 ## Project layout
 
 ```
