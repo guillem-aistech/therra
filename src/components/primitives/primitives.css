@@ -1,0 +1,202 @@
+/* =========================================================================
+   Therra — Primitive components styling
+   -------------------------------------------------------------------------
+   Flat instrument look: 1px outline borders, surface-container tiers, small
+   radii, tabular figures for all numbers. NO gradients / glass / shadows.
+   Colors come only from the MD3 + status tokens in src/styles/tokens.css.
+   ========================================================================= */
+
+/* --- StatusBadge ------------------------------------------------------- */
+
+.thr-status-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.375em;
+	border: 1px solid transparent;
+	border-radius: var(--radius-xs);
+	font-family: var(--font-sans);
+	font-weight: var(--text-label-medium-weight);
+	letter-spacing: var(--text-label-medium-tracking);
+	line-height: 1;
+	white-space: nowrap;
+	font-variant-numeric: tabular-nums;
+}
+
+.thr-status-badge--md {
+	padding: 0.3125rem 0.5rem;
+	font-size: var(--text-label-medium-size);
+}
+
+.thr-status-badge--sm {
+	padding: 0.1875rem 0.375rem;
+	gap: 0.3125em;
+	font-size: var(--text-label-small-size);
+}
+
+.thr-status-badge__label {
+	text-transform: uppercase;
+}
+
+.thr-status-badge[data-status="normal"] {
+	background: var(--status-normal-container);
+	color: var(--status-on-normal-container);
+	border-color: color-mix(in srgb, var(--status-normal) 35%, transparent);
+}
+.thr-status-badge[data-status="watch"] {
+	background: var(--status-watch-container);
+	color: var(--status-on-watch-container);
+	border-color: color-mix(in srgb, var(--status-watch) 35%, transparent);
+}
+.thr-status-badge[data-status="warning"] {
+	background: var(--status-warning-container);
+	color: var(--status-on-warning-container);
+	border-color: color-mix(in srgb, var(--status-warning) 35%, transparent);
+}
+.thr-status-badge[data-status="critical"] {
+	background: var(--status-critical-container);
+	color: var(--status-on-critical-container);
+	border-color: color-mix(in srgb, var(--status-critical) 35%, transparent);
+}
+
+.thr-status-badge svg {
+	flex: none;
+}
+
+/* --- RiskScoreCard ----------------------------------------------------- */
+
+.thr-risk-card {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+	padding: var(--space-2xs) var(--space-xs);
+	background: var(--color-surface-container);
+	border: 1px solid var(--color-outline-variant);
+	border-radius: var(--radius-sm);
+	border-left-width: 1px;
+}
+
+.thr-risk-card[data-status] {
+	border-left-width: 3px;
+}
+.thr-risk-card[data-status="normal"] {
+	border-left-color: var(--status-normal);
+}
+.thr-risk-card[data-status="watch"] {
+	border-left-color: var(--status-watch);
+}
+.thr-risk-card[data-status="warning"] {
+	border-left-color: var(--status-warning);
+}
+.thr-risk-card[data-status="critical"] {
+	border-left-color: var(--status-critical);
+}
+
+.thr-risk-card__label {
+	font-family: var(--font-sans);
+	font-size: var(--text-label-small-size);
+	font-weight: var(--text-label-small-weight);
+	letter-spacing: var(--text-label-small-tracking);
+	text-transform: uppercase;
+	color: var(--color-on-surface-variant);
+}
+
+.thr-risk-card__value {
+	display: flex;
+	align-items: baseline;
+	gap: 0.125rem;
+	font-family: var(--font-mono);
+	font-variant-numeric: tabular-nums;
+	color: var(--color-on-surface);
+}
+
+.thr-risk-card__number {
+	font-size: var(--text-headline-small-size);
+	font-weight: 600;
+	line-height: 1;
+}
+
+.thr-risk-card__unit,
+.thr-risk-card__max {
+	font-size: var(--text-body-small-size);
+	color: var(--color-on-surface-variant);
+}
+
+.thr-risk-card__unit {
+	margin-left: 0.125rem;
+}
+
+/* --- ThermalHeartbeatChart --------------------------------------------- */
+
+.thr-heartbeat {
+	width: 100%;
+}
+
+.thr-heartbeat__tooltip {
+	min-width: 9rem;
+	padding: var(--space-2xs) var(--space-xs);
+	background: var(--color-surface-container-high);
+	border: 1px solid var(--color-outline-variant);
+	border-radius: var(--radius-xs);
+	font-family: var(--font-mono);
+	font-variant-numeric: tabular-nums;
+}
+
+.thr-heartbeat__tooltip-date {
+	margin-bottom: 0.375rem;
+	font-family: var(--font-sans);
+	font-size: var(--text-label-small-size);
+	font-weight: var(--text-label-small-weight);
+	letter-spacing: var(--text-label-small-tracking);
+	text-transform: uppercase;
+	color: var(--color-on-surface-variant);
+}
+
+.thr-heartbeat__tooltip-rows {
+	display: grid;
+	gap: 0.1875rem;
+	margin: 0;
+}
+
+.thr-heartbeat__tooltip-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--space-sm);
+	font-size: var(--text-body-small-size);
+}
+
+.thr-heartbeat__tooltip-row dt {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.375rem;
+	color: var(--color-on-surface-variant);
+}
+
+.thr-heartbeat__tooltip-row dd {
+	margin: 0;
+	color: var(--color-on-surface);
+}
+
+.thr-heartbeat__tooltip-row--delta {
+	margin-top: 0.1875rem;
+	padding-top: 0.1875rem;
+	border-top: 1px solid var(--color-outline-variant);
+}
+
+.thr-heartbeat__swatch {
+	width: 0.625rem;
+	height: 0;
+	border-top: 2px solid currentColor;
+}
+
+.thr-heartbeat__swatch--baseline {
+	border-top-style: dashed;
+	border-top-color: var(--color-outline);
+}
+
+/* --- Sparkline --------------------------------------------------------- */
+
+.thr-sparkline {
+	display: block;
+	overflow: visible;
+}

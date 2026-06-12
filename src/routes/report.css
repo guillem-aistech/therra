@@ -1,0 +1,206 @@
+/* =========================================================================
+   /report — print-friendly infrastructure / insurance report.
+   Light DOM theme is applied on the route's <html data-theme="light">
+   (handled in __root). Flat, single readable column, 1px dividers, tabular
+   figures. No gradients/shadows. @media print hides chrome and prints white.
+   ========================================================================= */
+
+.report {
+	width: min(48rem, 100% - 2 * var(--space-sm));
+	margin-inline: auto;
+	padding-block: var(--space-xl) var(--space-2xl);
+	color: var(--color-on-surface);
+}
+
+/* Top toolbar (nav + actions) — hidden when printing. */
+.report__toolbar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--space-sm);
+	margin-block-end: var(--space-lg);
+}
+
+.report__back {
+	font-size: var(--text-label-large-size);
+	font-weight: var(--text-label-large-weight);
+	letter-spacing: var(--text-label-large-tracking);
+}
+
+.report__print {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--space-2xs);
+	padding: var(--space-2xs) var(--space-sm);
+	border: 1px solid var(--color-outline);
+	border-radius: var(--radius-xs);
+	background: var(--color-surface-container);
+	color: var(--color-on-surface);
+	font-size: var(--text-label-large-size);
+	font-weight: var(--text-label-large-weight);
+	letter-spacing: var(--text-label-large-tracking);
+	cursor: pointer;
+	transition: background var(--duration-fast) var(--ease-standard);
+}
+
+.report__print:hover {
+	background: var(--color-surface-container-high);
+}
+
+/* Document header. */
+.report__header {
+	border-block-end: 1px solid var(--color-outline);
+	padding-block-end: var(--space-md);
+}
+
+.report__eyebrow {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--space-2xs) var(--space-sm);
+	margin-block-end: var(--space-2xs);
+	color: var(--color-on-surface-variant);
+	font-size: var(--text-label-medium-size);
+	font-weight: var(--text-label-medium-weight);
+	letter-spacing: var(--text-label-medium-tracking);
+	text-transform: uppercase;
+}
+
+.report__title {
+	margin: 0;
+	font-size: var(--text-headline-large-size);
+	line-height: var(--text-headline-large-line);
+	font-weight: var(--text-headline-large-weight);
+	letter-spacing: var(--text-headline-large-tracking);
+}
+
+/* Mock-data badge. */
+.report__badge {
+	display: inline-flex;
+	align-items: center;
+	padding: 0.1em 0.5em;
+	border: 1px solid var(--color-outline);
+	border-radius: var(--radius-xs);
+	background: var(--color-surface-container-high);
+	color: var(--color-on-surface-variant);
+	font-family: var(--font-mono);
+	font-size: var(--text-label-small-size);
+	letter-spacing: var(--text-label-small-tracking);
+	text-transform: uppercase;
+	white-space: nowrap;
+}
+
+/* Metadata grid (asset / type / region / generated). */
+.report__meta {
+	display: grid;
+	gap: var(--space-2xs) var(--space-lg);
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+	margin-block-start: var(--space-md);
+}
+
+.report__metaItem {
+	display: flex;
+	flex-direction: column;
+	gap: 0.15rem;
+}
+
+.report__metaLabel {
+	color: var(--color-on-surface-variant);
+	font-size: var(--text-label-small-size);
+	font-weight: var(--text-label-small-weight);
+	letter-spacing: var(--text-label-small-tracking);
+	text-transform: uppercase;
+}
+
+.report__metaValue {
+	font-family: var(--font-mono);
+	font-size: var(--text-body-medium-size);
+	font-variant-numeric: tabular-nums;
+}
+
+/* Sections. */
+.report__section {
+	padding-block: var(--space-md);
+	border-block-end: 1px solid var(--color-outline-variant);
+}
+
+.report__section:last-of-type {
+	border-block-end: 0;
+}
+
+.report__sectionHeading {
+	margin: 0 0 var(--space-2xs);
+	font-size: var(--text-title-large-size);
+	line-height: var(--text-title-large-line);
+	font-weight: 600;
+	letter-spacing: var(--text-title-large-tracking);
+}
+
+.report__body {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-2xs);
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.report__body li {
+	max-width: none;
+	color: var(--color-on-surface);
+	font-size: var(--text-body-medium-size);
+	line-height: var(--text-body-medium-line);
+	/* tabular figures so inline temperatures/scores align */
+	font-variant-numeric: tabular-nums;
+}
+
+.report__footer {
+	margin-block-start: var(--space-lg);
+	padding-block-start: var(--space-md);
+	border-block-start: 1px solid var(--color-outline);
+	color: var(--color-on-surface-variant);
+	font-size: var(--text-body-small-size);
+}
+
+/* =========================================================================
+   Print — hide app chrome, force white, avoid awkward page breaks.
+   ========================================================================= */
+@media print {
+	.report {
+		width: 100%;
+		padding: 0;
+		color: #000;
+	}
+
+	.report__toolbar {
+		display: none;
+	}
+
+	.report__badge {
+		border-color: #000;
+		background: transparent;
+		color: #000;
+	}
+
+	.report__section {
+		break-inside: avoid;
+		border-block-end-color: #999;
+	}
+
+	.report__header,
+	.report__footer {
+		border-color: #000;
+	}
+
+	.report__metaValue,
+	.report__body li {
+		color: #000;
+	}
+
+	.report__metaLabel,
+	.report__eyebrow,
+	.report__footer {
+		color: #333;
+	}
+}

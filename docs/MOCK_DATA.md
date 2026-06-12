@@ -43,7 +43,7 @@ src/lib/data/
 
 ## 4. Entities & realistic ranges
 
-**Asset** — `id`, `name`, `asset_type` (14, below), `country`, `region`, `latitude`, `longitude`, `geometry_geojson?`, `operator` (plausible mock), `criticality` (Low/Medium/High/Strategic), `insurance_exposure_eur`, `baseline_temperature_c`, `current_temperature_c`, `anomaly_score` (0–1), `risk_score` (0–100), `health_score` (0–100), `last_observation_at`, `status`, `tags[]`, `description`. Plus **lens metric fields** (§8): `operational_load_pct`, `capacity_utilization_pct`, `flare_intensity_mw?`, `hazard_proximity_score`.
+**Asset** — `id`, `name`, `asset_type` (14, below), `country`, `region`, `latitude`, `longitude`, `geometry_geojson?`, `operator` (plausible mock), `criticality` (Low/Medium/High/Strategic), `insurance_exposure_eur`, `baseline_temperature_c`, `current_temperature_c`, `anomaly_score` (0–1), `risk_score` (0–100), `health_score` (0–100), `last_observation_at`, `status`, `tags[]`, `description`. Plus **lens metric fields** (§8): `operational_load_pct`, `capacity_utilization_pct`, `flare_intensity_mw?`, `hazard_proximity_score`. Area types (corridor / pipeline / zone / district) populate `geometry_geojson` (line/polygon) **and** a representative point for the roster and selection.
 
 **ThermalObservation** (90/asset) — `id`, `asset_id`, `timestamp`, `source` (an EO mission, §9), `land_surface_temperature_c`, `brightness_temperature_c`, `baseline_temperature_c`, `thermal_delta_c`, `anomaly_score`, `confidence` (0.4–0.98), `cloud_cover_percent` (0–95), `notes?`.
 

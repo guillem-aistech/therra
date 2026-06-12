@@ -3,6 +3,7 @@ import {
 	HeadContent,
 	Outlet,
 	Scripts,
+	useRouterState,
 } from '@tanstack/react-router'
 import type { ReactNode } from 'react'
 
@@ -46,8 +47,13 @@ function RootComponent() {
 }
 
 function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
+	// The app is dark by default; the print-friendly /report route renders on
+	// a light DOM theme. This is a CSS/DOM theme swap, never a Mapbox setStyle.
+	const pathname = useRouterState({ select: s => s.location.pathname })
+	const theme = pathname.startsWith('/report') ? 'light' : 'dark'
+
 	return (
-		<html lang='en'>
+		<html lang='en' data-theme={theme}>
 			<head>
 				<HeadContent />
 			</head>

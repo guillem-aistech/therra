@@ -1,0 +1,209 @@
+/* =========================================================================
+   /why-satellites — Phase-0-vs-dedicated-constellation pitch.
+   Dark theme (app default). Flat, instrument-like, 1px outline borders,
+   tabular figures, responsive tables that scroll within their container
+   (never cause page horizontal overflow). No gradients/shadows.
+   ========================================================================= */
+
+.pitch {
+	padding-block: var(--space-2xl) var(--space-3xl);
+}
+
+.pitch__back {
+	display: inline-block;
+	margin-block-end: var(--space-lg);
+	font-size: var(--text-label-large-size);
+	font-weight: var(--text-label-large-weight);
+	letter-spacing: var(--text-label-large-tracking);
+}
+
+/* Hero. */
+.pitch__hero {
+	max-width: 52rem;
+}
+
+.pitch__eyebrow {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--space-2xs);
+	margin-block-end: var(--space-sm);
+	color: var(--color-on-surface-variant);
+	font-family: var(--font-mono);
+	font-size: var(--text-label-medium-size);
+	letter-spacing: var(--text-label-medium-tracking);
+	text-transform: uppercase;
+}
+
+.pitch__badge {
+	padding: 0.1em 0.5em;
+	border: 1px solid var(--color-outline);
+	border-radius: var(--radius-xs);
+	background: var(--color-surface-container);
+	color: var(--color-on-surface-variant);
+}
+
+.pitch__title {
+	margin: 0;
+	font-size: var(--text-display-medium-size);
+	line-height: var(--text-display-medium-line);
+	font-weight: var(--text-display-medium-weight);
+	letter-spacing: var(--text-display-medium-tracking);
+}
+
+.pitch__tagline {
+	color: var(--color-primary);
+}
+
+.pitch__intro {
+	max-width: 42rem;
+	margin-block-start: var(--space-sm);
+	color: var(--color-on-surface-variant);
+	font-size: var(--text-body-large-size);
+	line-height: var(--text-body-large-line);
+}
+
+/* Section scaffolding. */
+.pitch__section {
+	margin-block-start: var(--space-2xl);
+}
+
+.pitch__sectionHead {
+	margin-block-end: var(--space-md);
+}
+
+.pitch__sectionTitle {
+	margin: 0;
+	font-size: var(--text-headline-medium-size);
+	line-height: var(--text-headline-medium-line);
+	font-weight: var(--text-headline-medium-weight);
+	letter-spacing: var(--text-headline-medium-tracking);
+}
+
+.pitch__sectionLede {
+	max-width: 44rem;
+	margin-block-start: var(--space-2xs);
+	color: var(--color-on-surface-variant);
+	font-size: var(--text-body-medium-size);
+}
+
+/* Table wrapper — scrolls horizontally within its own bounds on narrow
+   screens so the page itself never overflows. */
+.pitch__tableWrap {
+	width: 100%;
+	overflow-x: auto;
+	border: 1px solid var(--color-outline-variant);
+	border-radius: var(--radius-sm);
+	background: var(--color-surface-container-low);
+	-webkit-overflow-scrolling: touch;
+}
+
+.pitch__table {
+	width: 100%;
+	min-width: 32rem;
+	border-collapse: collapse;
+	font-size: var(--text-body-medium-size);
+}
+
+.pitch__table caption {
+	padding: var(--space-2xs) var(--space-sm);
+	color: var(--color-on-surface-variant);
+	font-size: var(--text-label-small-size);
+	letter-spacing: var(--text-label-small-tracking);
+	text-align: start;
+	text-transform: uppercase;
+}
+
+.pitch__table th,
+.pitch__table td {
+	padding: var(--space-xs) var(--space-sm);
+	text-align: start;
+	vertical-align: top;
+	border-block-end: 1px solid var(--color-outline-variant);
+}
+
+.pitch__table thead th {
+	position: sticky;
+	top: 0;
+	background: var(--color-surface-container);
+	color: var(--color-on-surface);
+	font-size: var(--text-label-medium-size);
+	font-weight: 600;
+	letter-spacing: var(--text-label-medium-tracking);
+	text-transform: uppercase;
+	white-space: nowrap;
+}
+
+.pitch__table tbody tr:last-child th,
+.pitch__table tbody tr:last-child td {
+	border-block-end: 0;
+}
+
+.pitch__table tbody th {
+	font-weight: 600;
+	color: var(--color-on-surface);
+	white-space: nowrap;
+}
+
+/* Numeric / spec cells use mono + tabular figures so columns align. */
+.pitch__table--specs td {
+	font-family: var(--font-mono);
+	font-variant-numeric: tabular-nums;
+}
+
+.pitch__table--specs td:first-of-type,
+.pitch__table--compare th[scope="col"] {
+	font-family: var(--font-sans);
+}
+
+/* Comparison table: tint the "today" vs "Therra" header columns subtly via
+   container tiers (flat, no gradient). */
+.pitch__colToday {
+	color: var(--color-on-surface-variant);
+}
+
+.pitch__colTherra {
+	color: var(--color-primary);
+}
+
+.pitch__table--compare td {
+	font-size: var(--text-body-medium-size);
+}
+
+/* Limitations callout. */
+.pitch__callout {
+	margin-block-start: var(--space-md);
+	padding: var(--space-md);
+	border: 1px solid var(--color-outline-variant);
+	border-inline-start: 3px solid var(--color-primary);
+	border-radius: var(--radius-sm);
+	background: var(--color-surface-container);
+}
+
+.pitch__calloutHead {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: var(--space-2xs) var(--space-sm);
+	margin-block-end: var(--space-xs);
+}
+
+.pitch__calloutTitle {
+	margin: 0;
+	font-size: var(--text-title-medium-size);
+	font-weight: 600;
+}
+
+.pitch__list {
+	margin: 0;
+	padding-inline-start: 1.2em;
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-2xs);
+}
+
+.pitch__list li {
+	max-width: 44rem;
+	color: var(--color-on-surface);
+	font-size: var(--text-body-medium-size);
+	line-height: var(--text-body-medium-line);
+}

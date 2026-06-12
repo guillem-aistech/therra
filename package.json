@@ -27,9 +27,11 @@
 		"@fontsource/ibm-plex-sans": "^5.2.8",
 		"@tanstack/react-router": "^1.170.15",
 		"@tanstack/react-start": "^1.168.25",
+		"lucide-react": "^1.17.0",
 		"mapbox-gl": "^3.24.0",
 		"react": "^19.2.7",
-		"react-dom": "^19.2.7"
+		"react-dom": "^19.2.7",
+		"recharts": "^3.8.1"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.4.16",
@@ -38,6 +40,7 @@
 		"@testing-library/dom": "^10.4.1",
 		"@testing-library/jest-dom": "^6.9.1",
 		"@testing-library/react": "^16.3.2",
+		"@types/geojson": "^7946.0.16",
 		"@types/node": "^25.9.3",
 		"@types/react": "^19.2.17",
 		"@types/react-dom": "^19.2.3",

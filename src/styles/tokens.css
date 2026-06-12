@@ -200,6 +200,31 @@
 	   (used by the logo only; not a UI/status signal). */
 	--color-brand: #ffb300;
 	--color-on-brand: #281900;
+
+	/* =====================================================================
+	   STATUS RAMP — four mutually-distinct hues (light scheme)
+	   ---------------------------------------------------------------------
+	   Normal (green) · Watch (azure) · Warning (orange) · Critical (red).
+	   Each is distinct from the others AND from the amber primary/brand;
+	   Watch is deliberately azure (never amber). Always paired with a glyph +
+	   label — never color alone. AA-verified on surface / surface-container*.
+	   --------------------------------------------------------------------- */
+	--status-normal: #1f7a4d;
+	--status-on-normal: #ffffff;
+	--status-normal-container: #b8efcc;
+	--status-on-normal-container: #00210f;
+	--status-watch: #1565a8;
+	--status-on-watch: #ffffff;
+	--status-watch-container: #cfe5ff;
+	--status-on-watch-container: #001c39;
+	--status-warning: #a8500a;
+	--status-on-warning: #ffffff;
+	--status-warning-container: #ffdcc2;
+	--status-on-warning-container: #2e1400;
+	--status-critical: #b4232c;
+	--status-on-critical: #ffffff;
+	--status-critical-container: #ffdad7;
+	--status-on-critical-container: #410006;
 }
 
 /* =======================================================================
@@ -253,6 +278,25 @@
 	--color-on-warning: #601400;
 	--color-warning-container: #872000;
 	--color-on-warning-container: #ffdbd1;
+
+	/* Status ramp — dark scheme. Light pastel hues on the near-black map base;
+	   well above AA on surface / surface-container*. */
+	--status-normal: #5cd99a;
+	--status-on-normal: #00210f;
+	--status-normal-container: #00391d;
+	--status-on-normal-container: #b8efcc;
+	--status-watch: #7fc0ff;
+	--status-on-watch: #001c39;
+	--status-watch-container: #00497e;
+	--status-on-watch-container: #cfe5ff;
+	--status-warning: #ff9d5c;
+	--status-on-warning: #2e1400;
+	--status-warning-container: #823d00;
+	--status-on-warning-container: #ffdcc2;
+	--status-critical: #ff7d82;
+	--status-on-critical: #410006;
+	--status-critical-container: #8e1620;
+	--status-on-critical-container: #ffdad7;
 }
 
 /* Follow the OS preference unless an explicit [data-theme] is set. The dark
@@ -304,6 +348,23 @@
 		--color-on-warning: #601400;
 		--color-warning-container: #872000;
 		--color-on-warning-container: #ffdbd1;
+
+		--status-normal: #5cd99a;
+		--status-on-normal: #00210f;
+		--status-normal-container: #00391d;
+		--status-on-normal-container: #b8efcc;
+		--status-watch: #7fc0ff;
+		--status-on-watch: #001c39;
+		--status-watch-container: #00497e;
+		--status-on-watch-container: #cfe5ff;
+		--status-warning: #ff9d5c;
+		--status-on-warning: #2e1400;
+		--status-warning-container: #823d00;
+		--status-on-warning-container: #ffdcc2;
+		--status-critical: #ff7d82;
+		--status-on-critical: #410006;
+		--status-critical-container: #8e1620;
+		--status-on-critical-container: #ffdad7;
 	}
 }
 

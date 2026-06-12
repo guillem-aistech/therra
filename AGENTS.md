@@ -30,7 +30,7 @@ The full product brief lives in [`docs/EARLY_PROPOSAL.md`](docs/EARLY_PROPOSAL.m
 | Runtime         | Node.js 24                                              |
 | Hosting         | Netlify (official-partner Vite plugin)                  |
 | Unit testing    | **Vitest** + Testing Library (jsdom)                    |
-| E2E / visual    | Playwright — E2E + responsive/mobile visual checks      |
+| UI inspection   | Playwright **via MCP** — manual responsive checks (no E2E test files) |
 | Environment     | Nix flake (`flake.nix`) — `devShells.default`           |
 
 ## Getting started
@@ -156,14 +156,14 @@ Concrete plan from the design debate; build onto the existing client-only `MapVi
 
 **Look at the UI — don't just trust the code.** This matters most for **mobile responsiveness** (the demo is opened on phones). A Playwright browser is available via MCP; use it to drive the running app, and capture a screenshot set before declaring any UI change done.
 
-1. Start the dev server (`pnpm dev`, <http://localhost:3000>) and open it in Playwright.
+1. The dev server usually runs at <http://localhost:3000> (the user runs it). If it isn't up, start it yourself (`pnpm dev`). Open it in the Playwright MCP browser.
 2. **Check these viewports on every layout change:** phone `390×844` (iPhone) and `360×740` (small Android), tablet `768×1024`, laptop `1280×800`. Screenshot each.
 3. At each width verify: **no horizontal scroll/overflow**; the map stays full-bleed and touch-usable; the rail collapses to the bottom-sheet with working detents (peek/half/full); text and touch targets are legible (≥44px); `SelectionSlideOver` and `LensSwitcher` work.
 4. Exercise the flows: switch lenses (the re-ramp), select an asset (slide-over + recenter), open a facet tab, filter via a KPI chip.
 5. Read the **browser console** after each interaction (token, WebGL, React warnings).
 6. Emulate `prefers-reduced-motion: reduce` (camera jumps are instant) and confirm the dark theme renders; emulate `prefers-color-scheme` for the `/report` light view; test **portrait and landscape** phone.
 
-The `verify` and `run` skills wrap this flow if you prefer.
+This is **interactive inspection via the Playwright MCP** — do **not** add `@playwright/test` or commit E2E spec files. The `verify` and `run` skills wrap this flow if you prefer.
 
 ## Project layout
 
@@ -258,6 +258,8 @@ guesswork) when implementing features or debugging.
 - Always work inside `nix develop`; do not install global tooling.
 - Use **pnpm** for every dependency operation (`pnpm add`, `pnpm remove`).
   Never create a `package-lock.json` or `yarn.lock`.
+- **Always add/upgrade deps at the latest version** (`pnpm add <pkg>@latest`);
+  don't pin to an older major without a written reason.
 - Run `pnpm check` (lint + typecheck) before declaring a change done.
 - Don't commit secrets. Use a `.env` file (gitignored) for local config.
 - Keep this file up to date when stack, commands, or conventions change.

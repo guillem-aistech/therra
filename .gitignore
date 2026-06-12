@@ -26,3 +26,9 @@ src/routeTree.gen.ts
 # Logs & misc
 *.log
 .DS_Store
+
+# Direnv
+.direnv/
+
+# Playwright MCP inspection artifacts
+.playwright-mcp/
