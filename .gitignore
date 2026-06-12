@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+.output/
+.nitro/
+.vite/
+
+# Generated route tree (regenerated on dev/build)
+src/routeTree.gen.ts
+
+# Netlify
+.netlify/
+
+# Environment (never commit secrets)
+.env
+.env.*
+!.env.example
+
+# Caches
+.cache/
+*.tsbuildinfo
+
+# Logs & misc
+*.log
+.DS_Store

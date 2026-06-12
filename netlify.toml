@@ -1,0 +1,14 @@
+# Netlify build configuration for TanStack Start.
+# The @netlify/vite-plugin-tanstack-start plugin handles most wiring; these
+# settings make the build explicit and pin the Node version to match the flake.
+
+[build]
+  command = "pnpm build"
+  publish = "dist/client"
+
+[build.environment]
+  NODE_VERSION = "24"
+
+[dev]
+  command = "pnpm dev"
+  port = 3000
